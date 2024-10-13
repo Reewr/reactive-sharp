@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    <CompilerGeneratedFilesOutputPath>gen</CompilerGeneratedFilesOutputPath>
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\base\reactive-sharp.csproj" />
+    <ProjectReference Include="..\godot\reactive-sharp-godot.csproj" />
+    <PackageReference Include="GodotSharp" Version="4.3.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.11.0" PrivateAssets="all" />
+  </ItemGroup>
+</Project>

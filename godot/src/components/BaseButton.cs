@@ -1,0 +1,43 @@
+namespace ReactiveSharpGodot.Components
+{
+    public class BaseButton : Control
+    {
+        public System.Boolean? Disabled { protected get; init; }
+        public System.Boolean? ToggleMode { protected get; init; }
+        public System.Boolean? ButtonPressed { protected get; init; }
+        public Godot.BaseButton.ActionModeEnum? ActionMode { protected get; init; }
+        public Godot.MouseButtonMask? ButtonMask { protected get; init; }
+        public System.Boolean? KeepPressedOutside { protected get; init; }
+        public Godot.ButtonGroup? ButtonGroup { protected get; init; }
+        public Godot.Shortcut? Shortcut { protected get; init; }
+        public System.Boolean? ShortcutFeedback { protected get; init; }
+        public System.Boolean? ShortcutInTooltip { protected get; init; }
+
+        public override ReactiveSharpGodot.IGNode Build(System.Collections.Generic.List<ReactiveSharp.Node> builtChildren) => DefaultBuild(new ReactiveSharpGodot.Nodes.GBaseButton(), builtChildren);
+        public override void UpdateProperties(ReactiveSharpGodot.IGNode node)
+        {
+            var castedNode = (Godot.BaseButton)node.Node;
+            base.UpdateProperties(node);
+            if (Disabled is System.Boolean n0)
+                castedNode.Disabled = n0;
+            if (ToggleMode is System.Boolean n1)
+                castedNode.ToggleMode = n1;
+            if (ButtonPressed is System.Boolean n2)
+                castedNode.ButtonPressed = n2;
+            if (ActionMode is Godot.BaseButton.ActionModeEnum n3)
+                castedNode.ActionMode = n3;
+            if (ButtonMask is Godot.MouseButtonMask n4)
+                castedNode.ButtonMask = n4;
+            if (KeepPressedOutside is System.Boolean n5)
+                castedNode.KeepPressedOutside = n5;
+            if (ButtonGroup is Godot.ButtonGroup n6)
+                castedNode.ButtonGroup = n6;
+            if (Shortcut is Godot.Shortcut n7)
+                castedNode.Shortcut = n7;
+            if (ShortcutFeedback is System.Boolean n8)
+                castedNode.ShortcutFeedback = n8;
+            if (ShortcutInTooltip is System.Boolean n9)
+                castedNode.ShortcutInTooltip = n9;
+        }
+    }
+}

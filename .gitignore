@@ -6,3 +6,4 @@ test-results
 *.import
 */bin
 */obj
+godot.gen/gen
