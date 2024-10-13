@@ -4,6 +4,7 @@ namespace ReactiveSharpGodot.Components
     {
         public System.Boolean? SwitchOnHover { protected get; init; }
         public System.Int32? ItemCount { protected get; init; }
+        public System.Action? AboutToPopup { protected get; init; }
 
         public override ReactiveSharpGodot.IGNode Build(System.Collections.Generic.List<ReactiveSharp.Node> builtChildren) => DefaultBuild(new ReactiveSharpGodot.Nodes.GMenuButton(), builtChildren);
         public override void UpdateProperties(ReactiveSharpGodot.IGNode node)
@@ -14,6 +15,8 @@ namespace ReactiveSharpGodot.Components
                 castedNode.SwitchOnHover = n0;
             if (ItemCount is System.Int32 n1)
                 castedNode.ItemCount = n1;
+            if (AboutToPopup is System.Action e0)
+                castedNode.AboutToPopup += e0;
         }
     }
 }

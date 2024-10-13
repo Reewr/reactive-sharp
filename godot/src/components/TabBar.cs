@@ -14,6 +14,14 @@ namespace ReactiveSharpGodot.Components
         public System.Boolean? SelectWithRmb { protected get; init; }
         public System.Boolean? DeselectEnabled { protected get; init; }
         public System.Int32? TabCount { protected get; init; }
+        public Godot.TabBar.TabSelectedEventHandler? TabSelected { protected get; init; }
+        public Godot.TabBar.TabChangedEventHandler? TabChanged { protected get; init; }
+        public Godot.TabBar.TabClickedEventHandler? TabClicked { protected get; init; }
+        public Godot.TabBar.TabRmbClickedEventHandler? TabRmbClicked { protected get; init; }
+        public Godot.TabBar.TabClosePressedEventHandler? TabClosePressed { protected get; init; }
+        public Godot.TabBar.TabButtonPressedEventHandler? TabButtonPressed { protected get; init; }
+        public Godot.TabBar.TabHoveredEventHandler? TabHovered { protected get; init; }
+        public Godot.TabBar.ActiveTabRearrangedEventHandler? ActiveTabRearranged { protected get; init; }
 
         public override ReactiveSharpGodot.IGNode Build(System.Collections.Generic.List<ReactiveSharp.Node> builtChildren) => DefaultBuild(new ReactiveSharpGodot.Nodes.GTabBar(), builtChildren);
         public override void UpdateProperties(ReactiveSharpGodot.IGNode node)
@@ -44,6 +52,22 @@ namespace ReactiveSharpGodot.Components
                 castedNode.DeselectEnabled = n10;
             if (TabCount is System.Int32 n11)
                 castedNode.TabCount = n11;
+            if (TabSelected is Godot.TabBar.TabSelectedEventHandler e0)
+                castedNode.TabSelected += e0;
+            if (TabChanged is Godot.TabBar.TabChangedEventHandler e1)
+                castedNode.TabChanged += e1;
+            if (TabClicked is Godot.TabBar.TabClickedEventHandler e2)
+                castedNode.TabClicked += e2;
+            if (TabRmbClicked is Godot.TabBar.TabRmbClickedEventHandler e3)
+                castedNode.TabRmbClicked += e3;
+            if (TabClosePressed is Godot.TabBar.TabClosePressedEventHandler e4)
+                castedNode.TabClosePressed += e4;
+            if (TabButtonPressed is Godot.TabBar.TabButtonPressedEventHandler e5)
+                castedNode.TabButtonPressed += e5;
+            if (TabHovered is Godot.TabBar.TabHoveredEventHandler e6)
+                castedNode.TabHovered += e6;
+            if (ActiveTabRearranged is Godot.TabBar.ActiveTabRearrangedEventHandler e7)
+                castedNode.ActiveTabRearranged += e7;
         }
     }
 }

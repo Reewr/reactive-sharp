@@ -11,6 +11,7 @@ namespace ReactiveSharpGodot.Components
         public System.Int32? PatchMarginBottom { protected get; init; }
         public Godot.NinePatchRect.AxisStretchMode? AxisStretchHorizontal { protected get; init; }
         public Godot.NinePatchRect.AxisStretchMode? AxisStretchVertical { protected get; init; }
+        public System.Action? TextureChanged { protected get; init; }
 
         public override ReactiveSharpGodot.IGNode Build(System.Collections.Generic.List<ReactiveSharp.Node> builtChildren) => DefaultBuild(new ReactiveSharpGodot.Nodes.GNinePatchRect(), builtChildren);
         public override void UpdateProperties(ReactiveSharpGodot.IGNode node)
@@ -35,6 +36,8 @@ namespace ReactiveSharpGodot.Components
                 castedNode.AxisStretchHorizontal = n7;
             if (AxisStretchVertical is Godot.NinePatchRect.AxisStretchMode n8)
                 castedNode.AxisStretchVertical = n8;
+            if (TextureChanged is System.Action e0)
+                castedNode.TextureChanged += e0;
         }
     }
 }

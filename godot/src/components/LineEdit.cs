@@ -32,6 +32,9 @@ namespace ReactiveSharpGodot.Components
         public System.String? Language { protected get; init; }
         public Godot.TextServer.StructuredTextParser? StructuredTextBidiOverride { protected get; init; }
         public Godot.Collections.Array? StructuredTextBidiOverrideOptions { protected get; init; }
+        public Godot.LineEdit.TextChangedEventHandler? TextChanged { protected get; init; }
+        public Godot.LineEdit.TextChangeRejectedEventHandler? TextChangeRejected { protected get; init; }
+        public Godot.LineEdit.TextSubmittedEventHandler? TextSubmitted { protected get; init; }
 
         public override ReactiveSharpGodot.IGNode Build(System.Collections.Generic.List<ReactiveSharp.Node> builtChildren) => DefaultBuild(new ReactiveSharpGodot.Nodes.GLineEdit(), builtChildren);
         public override void UpdateProperties(ReactiveSharpGodot.IGNode node)
@@ -98,6 +101,12 @@ namespace ReactiveSharpGodot.Components
                 castedNode.StructuredTextBidiOverride = n28;
             if (StructuredTextBidiOverrideOptions is Godot.Collections.Array n29)
                 castedNode.StructuredTextBidiOverrideOptions = n29;
+            if (TextChanged is Godot.LineEdit.TextChangedEventHandler e0)
+                castedNode.TextChanged += e0;
+            if (TextChangeRejected is Godot.LineEdit.TextChangeRejectedEventHandler e1)
+                castedNode.TextChangeRejected += e1;
+            if (TextSubmitted is Godot.LineEdit.TextSubmittedEventHandler e2)
+                castedNode.TextSubmitted += e2;
         }
     }
 }

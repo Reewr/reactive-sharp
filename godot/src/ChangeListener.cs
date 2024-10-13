@@ -6,57 +6,59 @@ using System.Reflection;
 [AttributeUsage(AttributeTargets.Class)]
 public class PropertyInterceptorAttribute : Attribute, IMethodDecorator
 {
-	private static readonly Dictionary<object, Dictionary<string, object>> _propertyStates = [];
+	private static readonly Dictionary<object, Dictionary<string, object>> propertyStates = [];
+	private static readonly Dictionary<object, Dictionary<string, List<Delegate>>> eventHandlers = [];
 
-	private object? _instance;
-	private string? _propertyName;
+	private bool isEvent = false;
+	private string? propertyName;
 
 	public void Init(object instance, MethodBase method, object[] args)
 	{
-		_instance = instance;
 		// If the method is a property setter, extract the property name
-		if (method.IsSpecialName && method.Name.StartsWith("set_"))
+		if (instance == null || !method.IsSpecialName) return;
+
+		if (method.Name.StartsWith("add_") || method.Name.StartsWith("remove_"))
 		{
-			_propertyName = method.Name[4..];
+			isEvent = true;
+			propertyName = method.Name[4..];
 		}
-	}
-
-	// Called before the decorated method execution
-	public void OnEntry()
-	{
-		if (_instance == null || string.IsNullOrEmpty(_propertyName))
-			return;
-
-		if (!_propertyStates.ContainsKey(_instance)) _propertyStates[_instance] = [];
-
-		var state = _propertyStates[_instance];
-		if (!state.ContainsKey(_propertyName))
+		else if (method.Name.StartsWith("set_"))
 		{
-			var property = _instance.GetType().GetProperty(_propertyName);
-			if (property != null)
+			propertyName = method.Name[4..];
+		}
+
+		if (propertyName == null) return;
+
+		if (isEvent)
+		{
+			eventHandlers[instance] ??= [];
+			eventHandlers[instance][propertyName] ??= [];
+			eventHandlers[instance][propertyName].Add((Delegate)args[0]);
+		}
+		else
+		{
+			var state = propertyStates[instance] ??= [];
+			if (!state.ContainsKey(propertyName))
 			{
-				var currentValue = property.GetValue(_instance);
-				if (currentValue != null) state[_propertyName] = currentValue;
+				var property = instance.GetType().GetProperty(propertyName);
+				if (property != null)
+				{
+					var currentValue = property.GetValue(instance);
+					if (currentValue != null) state[propertyName] = currentValue;
+				}
 			}
 		}
 	}
 
-	// Called after the decorated method execution
-	public void OnExit()
-	{
-		// No action needed on exit for this scenario
-	}
-
-	// Called if the decorated method throws an exception
-	public void OnException(Exception exception)
-	{
-		// Handle exceptions if necessary
-	}
+	public void OnEntry() { }
+	public void OnExit() { }
+	public void OnException(Exception exception) { }
 
 	// Method to reset properties to their previous states
 	public static void Reset(object instance)
 	{
-		if (!_propertyStates.TryGetValue(instance, out var state)) return;
+		if (instance == null) return;
+		if (!propertyStates.TryGetValue(instance, out var state)) return;
 
 		foreach (var entry in state)
 		{
@@ -67,6 +69,7 @@ public class PropertyInterceptorAttribute : Attribute, IMethodDecorator
 			}
 		}
 
-		_propertyStates.Remove(instance);
+		propertyStates.Remove(instance);
 	}
+
 }

@@ -29,7 +29,33 @@ internal class ComponentGenerator : CodeGenerator
 			$"var castedNode = (Godot.{type.Name})node.Node;" +
 			(callBase ? "base.UpdateProperties(node);" : "") +
 			string.Join("\n", CreatePropertyAssignments(properties)) +
+			"\n" +
+			string.Join("\n", CreateEventAssignments(type)) +
 		"}";
+
+	private static string CreateEventProperties(Type type)
+	{
+		var events = type.GetEvents(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance);
+		return string.Join("\n", events.Select(e =>
+		{
+			var name = e.Name;
+			var handlerType = GetFullQualifiedTypeName(e.EventHandlerType!).Replace("+", ".").Replace(" ", "");
+			return $"public {handlerType}? {name} {{ protected get; init; }}";
+		}));
+	}
+
+	private static string CreateEventAssignments(Type type)
+	{
+		var i = 0;
+		var events = type.GetEvents(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance);
+		return string.Join("\n", events.Select(e =>
+		{
+			var name = e.Name;
+			var handlerType = GetFullQualifiedTypeName(e.EventHandlerType!).Replace("+", ".").Replace(" ", "");
+			var num = i++;
+			return $"if ({name} is {handlerType} e{num}) castedNode.{name} += e{num};";
+		}));
+	}
 
 	public static ClassDeclarationSyntax GetBaseControlComponent()
 	{
@@ -38,6 +64,9 @@ internal class ComponentGenerator : CodeGenerator
 		"public class Control : ReactiveSharp.NodeComponent<ReactiveSharpGodot.IGNode> " +
 		"{ " +
 		string.Join("\n", CreatePropertyDefinitions(props)) +
+		"" +
+		CreateEventProperties(typeof(Godot.Control)) +
+		"" +
 		"    protected ReactiveSharpGodot.IGNode DefaultBuild( " +
 		"      ReactiveSharpGodot.IGNode node, " +
 		"      List<ReactiveSharp.Node> builtChildren) " +
@@ -78,6 +107,8 @@ internal class ComponentGenerator : CodeGenerator
 		];
 
 		code.Add(CreatePropertyDefinitions(uniqueProperties));
+		code.Add("\n");
+		code.Add(string.Join("\n", CreateEventProperties(type)));
 
 		if (!isAbstract)
 		{

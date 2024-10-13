@@ -13,6 +13,13 @@ namespace ReactiveSharpGodot.Components
         public System.Boolean? UseHiddenTabsForMinSize { protected get; init; }
         public Godot.Control.FocusModeEnum? TabFocusMode { protected get; init; }
         public System.Boolean? DeselectEnabled { protected get; init; }
+        public Godot.TabContainer.ActiveTabRearrangedEventHandler? ActiveTabRearranged { protected get; init; }
+        public Godot.TabContainer.TabChangedEventHandler? TabChanged { protected get; init; }
+        public Godot.TabContainer.TabClickedEventHandler? TabClicked { protected get; init; }
+        public Godot.TabContainer.TabHoveredEventHandler? TabHovered { protected get; init; }
+        public Godot.TabContainer.TabSelectedEventHandler? TabSelected { protected get; init; }
+        public Godot.TabContainer.TabButtonPressedEventHandler? TabButtonPressed { protected get; init; }
+        public System.Action? PrePopupPressed { protected get; init; }
 
         public override ReactiveSharpGodot.IGNode Build(System.Collections.Generic.List<ReactiveSharp.Node> builtChildren) => DefaultBuild(new ReactiveSharpGodot.Nodes.GTabContainer(), builtChildren);
         public override void UpdateProperties(ReactiveSharpGodot.IGNode node)
@@ -41,6 +48,20 @@ namespace ReactiveSharpGodot.Components
                 castedNode.TabFocusMode = n9;
             if (DeselectEnabled is System.Boolean n10)
                 castedNode.DeselectEnabled = n10;
+            if (ActiveTabRearranged is Godot.TabContainer.ActiveTabRearrangedEventHandler e0)
+                castedNode.ActiveTabRearranged += e0;
+            if (TabChanged is Godot.TabContainer.TabChangedEventHandler e1)
+                castedNode.TabChanged += e1;
+            if (TabClicked is Godot.TabContainer.TabClickedEventHandler e2)
+                castedNode.TabClicked += e2;
+            if (TabHovered is Godot.TabContainer.TabHoveredEventHandler e3)
+                castedNode.TabHovered += e3;
+            if (TabSelected is Godot.TabContainer.TabSelectedEventHandler e4)
+                castedNode.TabSelected += e4;
+            if (TabButtonPressed is Godot.TabContainer.TabButtonPressedEventHandler e5)
+                castedNode.TabButtonPressed += e5;
+            if (PrePopupPressed is System.Action e6)
+                castedNode.PrePopupPressed += e6;
         }
     }
 }

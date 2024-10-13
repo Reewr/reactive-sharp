@@ -43,6 +43,13 @@ namespace ReactiveSharpGodot.Components
         public System.String? Language { protected get; init; }
         public Godot.TextServer.StructuredTextParser? StructuredTextBidiOverride { protected get; init; }
         public Godot.Collections.Array? StructuredTextBidiOverrideOptions { protected get; init; }
+        public System.Action? TextSet { protected get; init; }
+        public System.Action? TextChanged { protected get; init; }
+        public Godot.TextEdit.LinesEditedFromEventHandler? LinesEditedFrom { protected get; init; }
+        public System.Action? CaretChanged { protected get; init; }
+        public Godot.TextEdit.GutterClickedEventHandler? GutterClicked { protected get; init; }
+        public System.Action? GutterAdded { protected get; init; }
+        public System.Action? GutterRemoved { protected get; init; }
 
         public override ReactiveSharpGodot.IGNode Build(System.Collections.Generic.List<ReactiveSharp.Node> builtChildren) => DefaultBuild(new ReactiveSharpGodot.Nodes.GTextEdit(), builtChildren);
         public override void UpdateProperties(ReactiveSharpGodot.IGNode node)
@@ -131,6 +138,20 @@ namespace ReactiveSharpGodot.Components
                 castedNode.StructuredTextBidiOverride = n39;
             if (StructuredTextBidiOverrideOptions is Godot.Collections.Array n40)
                 castedNode.StructuredTextBidiOverrideOptions = n40;
+            if (TextSet is System.Action e0)
+                castedNode.TextSet += e0;
+            if (TextChanged is System.Action e1)
+                castedNode.TextChanged += e1;
+            if (LinesEditedFrom is Godot.TextEdit.LinesEditedFromEventHandler e2)
+                castedNode.LinesEditedFrom += e2;
+            if (CaretChanged is System.Action e3)
+                castedNode.CaretChanged += e3;
+            if (GutterClicked is Godot.TextEdit.GutterClickedEventHandler e4)
+                castedNode.GutterClicked += e4;
+            if (GutterAdded is System.Action e5)
+                castedNode.GutterAdded += e5;
+            if (GutterRemoved is System.Action e6)
+                castedNode.GutterRemoved += e6;
         }
     }
 }

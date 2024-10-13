@@ -28,6 +28,24 @@ namespace ReactiveSharpGodot.Components
         public System.Boolean? ShowGridButtons { protected get; init; }
         public System.Boolean? ShowMinimapButton { protected get; init; }
         public System.Boolean? ShowArrangeButton { protected get; init; }
+        public Godot.GraphEdit.ConnectionRequestEventHandler? ConnectionRequest { protected get; init; }
+        public Godot.GraphEdit.DisconnectionRequestEventHandler? DisconnectionRequest { protected get; init; }
+        public Godot.GraphEdit.ConnectionToEmptyEventHandler? ConnectionToEmpty { protected get; init; }
+        public Godot.GraphEdit.ConnectionFromEmptyEventHandler? ConnectionFromEmpty { protected get; init; }
+        public Godot.GraphEdit.ConnectionDragStartedEventHandler? ConnectionDragStarted { protected get; init; }
+        public System.Action? ConnectionDragEnded { protected get; init; }
+        public System.Action? CopyNodesRequest { protected get; init; }
+        public System.Action? PasteNodesRequest { protected get; init; }
+        public System.Action? DuplicateNodesRequest { protected get; init; }
+        public Godot.GraphEdit.DeleteNodesRequestEventHandler? DeleteNodesRequest { protected get; init; }
+        public Godot.GraphEdit.NodeSelectedEventHandler? NodeSelected { protected get; init; }
+        public Godot.GraphEdit.NodeDeselectedEventHandler? NodeDeselected { protected get; init; }
+        public Godot.GraphEdit.FrameRectChangedEventHandler? FrameRectChanged { protected get; init; }
+        public Godot.GraphEdit.PopupRequestEventHandler? PopupRequest { protected get; init; }
+        public System.Action? BeginNodeMove { protected get; init; }
+        public System.Action? EndNodeMove { protected get; init; }
+        public Godot.GraphEdit.GraphElementsLinkedToFrameRequestEventHandler? GraphElementsLinkedToFrameRequest { protected get; init; }
+        public Godot.GraphEdit.ScrollOffsetChangedEventHandler? ScrollOffsetChanged { protected get; init; }
 
         public override ReactiveSharpGodot.IGNode Build(System.Collections.Generic.List<ReactiveSharp.Node> builtChildren) => DefaultBuild(new ReactiveSharpGodot.Nodes.GGraphEdit(), builtChildren);
         public override void UpdateProperties(ReactiveSharpGodot.IGNode node)
@@ -86,6 +104,42 @@ namespace ReactiveSharpGodot.Components
                 castedNode.ShowMinimapButton = n24;
             if (ShowArrangeButton is System.Boolean n25)
                 castedNode.ShowArrangeButton = n25;
+            if (ConnectionRequest is Godot.GraphEdit.ConnectionRequestEventHandler e0)
+                castedNode.ConnectionRequest += e0;
+            if (DisconnectionRequest is Godot.GraphEdit.DisconnectionRequestEventHandler e1)
+                castedNode.DisconnectionRequest += e1;
+            if (ConnectionToEmpty is Godot.GraphEdit.ConnectionToEmptyEventHandler e2)
+                castedNode.ConnectionToEmpty += e2;
+            if (ConnectionFromEmpty is Godot.GraphEdit.ConnectionFromEmptyEventHandler e3)
+                castedNode.ConnectionFromEmpty += e3;
+            if (ConnectionDragStarted is Godot.GraphEdit.ConnectionDragStartedEventHandler e4)
+                castedNode.ConnectionDragStarted += e4;
+            if (ConnectionDragEnded is System.Action e5)
+                castedNode.ConnectionDragEnded += e5;
+            if (CopyNodesRequest is System.Action e6)
+                castedNode.CopyNodesRequest += e6;
+            if (PasteNodesRequest is System.Action e7)
+                castedNode.PasteNodesRequest += e7;
+            if (DuplicateNodesRequest is System.Action e8)
+                castedNode.DuplicateNodesRequest += e8;
+            if (DeleteNodesRequest is Godot.GraphEdit.DeleteNodesRequestEventHandler e9)
+                castedNode.DeleteNodesRequest += e9;
+            if (NodeSelected is Godot.GraphEdit.NodeSelectedEventHandler e10)
+                castedNode.NodeSelected += e10;
+            if (NodeDeselected is Godot.GraphEdit.NodeDeselectedEventHandler e11)
+                castedNode.NodeDeselected += e11;
+            if (FrameRectChanged is Godot.GraphEdit.FrameRectChangedEventHandler e12)
+                castedNode.FrameRectChanged += e12;
+            if (PopupRequest is Godot.GraphEdit.PopupRequestEventHandler e13)
+                castedNode.PopupRequest += e13;
+            if (BeginNodeMove is System.Action e14)
+                castedNode.BeginNodeMove += e14;
+            if (EndNodeMove is System.Action e15)
+                castedNode.EndNodeMove += e15;
+            if (GraphElementsLinkedToFrameRequest is Godot.GraphEdit.GraphElementsLinkedToFrameRequestEventHandler e16)
+                castedNode.GraphElementsLinkedToFrameRequest += e16;
+            if (ScrollOffsetChanged is Godot.GraphEdit.ScrollOffsetChangedEventHandler e17)
+                castedNode.ScrollOffsetChanged += e17;
         }
     }
 }

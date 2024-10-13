@@ -71,6 +71,15 @@ namespace ReactiveSharpGodot.Components
         public Godot.Node.PhysicsInterpolationModeEnum? PhysicsInterpolationMode { protected get; init; }
         public Godot.Node.AutoTranslateModeEnum? AutoTranslateMode { protected get; init; }
         public System.String? EditorDescription { protected get; init; }
+        public System.Action? Resized { protected get; init; }
+        public Godot.Control.GuiInputEventHandler? GuiInput { protected get; init; }
+        public System.Action? MouseEntered { protected get; init; }
+        public System.Action? MouseExited { protected get; init; }
+        public System.Action? FocusEntered { protected get; init; }
+        public System.Action? FocusExited { protected get; init; }
+        public System.Action? SizeFlagsChanged { protected get; init; }
+        public System.Action? MinimumSizeChanged { protected get; init; }
+        public System.Action? ThemeChanged { protected get; init; }
 
         protected ReactiveSharpGodot.IGNode DefaultBuild(ReactiveSharpGodot.IGNode node, List<ReactiveSharp.Node> builtChildren)
         {
@@ -222,6 +231,24 @@ namespace ReactiveSharpGodot.Components
                 castedNode.AutoTranslateMode = n67;
             if (EditorDescription is System.String n68)
                 castedNode.EditorDescription = n68;
+            if (Resized is System.Action e0)
+                castedNode.Resized += e0;
+            if (GuiInput is Godot.Control.GuiInputEventHandler e1)
+                castedNode.GuiInput += e1;
+            if (MouseEntered is System.Action e2)
+                castedNode.MouseEntered += e2;
+            if (MouseExited is System.Action e3)
+                castedNode.MouseExited += e3;
+            if (FocusEntered is System.Action e4)
+                castedNode.FocusEntered += e4;
+            if (FocusExited is System.Action e5)
+                castedNode.FocusExited += e5;
+            if (SizeFlagsChanged is System.Action e6)
+                castedNode.SizeFlagsChanged += e6;
+            if (MinimumSizeChanged is System.Action e7)
+                castedNode.MinimumSizeChanged += e7;
+            if (ThemeChanged is System.Action e8)
+                castedNode.ThemeChanged += e8;
         }
     }
 }

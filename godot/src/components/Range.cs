@@ -12,6 +12,8 @@ namespace ReactiveSharpGodot.Components
         public System.Boolean? Rounded { protected get; init; }
         public System.Boolean? AllowGreater { protected get; init; }
         public System.Boolean? AllowLesser { protected get; init; }
+        public Godot.Range.ValueChangedEventHandler? ValueChanged { protected get; init; }
+        public System.Action? Changed { protected get; init; }
 
         public override ReactiveSharpGodot.IGNode Build(System.Collections.Generic.List<ReactiveSharp.Node> builtChildren) => DefaultBuild(new ReactiveSharpGodot.Nodes.GRange(), builtChildren);
         public override void UpdateProperties(ReactiveSharpGodot.IGNode node)
@@ -38,6 +40,10 @@ namespace ReactiveSharpGodot.Components
                 castedNode.AllowGreater = n8;
             if (AllowLesser is System.Boolean n9)
                 castedNode.AllowLesser = n9;
+            if (ValueChanged is Godot.Range.ValueChangedEventHandler e0)
+                castedNode.ValueChanged += e0;
+            if (Changed is System.Action e1)
+                castedNode.Changed += e1;
         }
     }
 }

@@ -13,6 +13,7 @@ namespace ReactiveSharpGodot.Components
         public System.Int32? BufferingMsec { protected get; init; }
         public System.Double? StreamPosition { protected get; init; }
         public Godot.StringName? Bus { protected get; init; }
+        public System.Action? Finished { protected get; init; }
 
         public override ReactiveSharpGodot.IGNode Build(System.Collections.Generic.List<ReactiveSharp.Node> builtChildren) => DefaultBuild(new ReactiveSharpGodot.Nodes.GVideoStreamPlayer(), builtChildren);
         public override void UpdateProperties(ReactiveSharpGodot.IGNode node)
@@ -41,6 +42,8 @@ namespace ReactiveSharpGodot.Components
                 castedNode.StreamPosition = n9;
             if (Bus is Godot.StringName n10)
                 castedNode.Bus = n10;
+            if (Finished is System.Action e0)
+                castedNode.Finished += e0;
         }
     }
 }

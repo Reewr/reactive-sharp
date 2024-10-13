@@ -13,6 +13,9 @@ namespace ReactiveSharpGodot.Components
         public System.Boolean? SlidersVisible { protected get; init; }
         public System.Boolean? HexVisible { protected get; init; }
         public System.Boolean? PresetsVisible { protected get; init; }
+        public Godot.ColorPicker.ColorChangedEventHandler? ColorChanged { protected get; init; }
+        public Godot.ColorPicker.PresetAddedEventHandler? PresetAdded { protected get; init; }
+        public Godot.ColorPicker.PresetRemovedEventHandler? PresetRemoved { protected get; init; }
 
         public override ReactiveSharpGodot.IGNode Build(System.Collections.Generic.List<ReactiveSharp.Node> builtChildren) => DefaultBuild(new ReactiveSharpGodot.Nodes.GColorPicker(), builtChildren);
         public override void UpdateProperties(ReactiveSharpGodot.IGNode node)
@@ -41,6 +44,12 @@ namespace ReactiveSharpGodot.Components
                 castedNode.HexVisible = n9;
             if (PresetsVisible is System.Boolean n10)
                 castedNode.PresetsVisible = n10;
+            if (ColorChanged is Godot.ColorPicker.ColorChangedEventHandler e0)
+                castedNode.ColorChanged += e0;
+            if (PresetAdded is Godot.ColorPicker.PresetAddedEventHandler e1)
+                castedNode.PresetAdded += e1;
+            if (PresetRemoved is Godot.ColorPicker.PresetRemovedEventHandler e2)
+                castedNode.PresetRemoved += e2;
         }
     }
 }

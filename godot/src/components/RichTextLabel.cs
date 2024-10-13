@@ -26,6 +26,10 @@ namespace ReactiveSharpGodot.Components
         public System.String? Language { protected get; init; }
         public Godot.TextServer.StructuredTextParser? StructuredTextBidiOverride { protected get; init; }
         public Godot.Collections.Array? StructuredTextBidiOverrideOptions { protected get; init; }
+        public Godot.RichTextLabel.MetaClickedEventHandler? MetaClicked { protected get; init; }
+        public Godot.RichTextLabel.MetaHoverStartedEventHandler? MetaHoverStarted { protected get; init; }
+        public Godot.RichTextLabel.MetaHoverEndedEventHandler? MetaHoverEnded { protected get; init; }
+        public System.Action? Finished { protected get; init; }
 
         public override ReactiveSharpGodot.IGNode Build(System.Collections.Generic.List<ReactiveSharp.Node> builtChildren) => DefaultBuild(new ReactiveSharpGodot.Nodes.GRichTextLabel(), builtChildren);
         public override void UpdateProperties(ReactiveSharpGodot.IGNode node)
@@ -80,6 +84,14 @@ namespace ReactiveSharpGodot.Components
                 castedNode.StructuredTextBidiOverride = n22;
             if (StructuredTextBidiOverrideOptions is Godot.Collections.Array n23)
                 castedNode.StructuredTextBidiOverrideOptions = n23;
+            if (MetaClicked is Godot.RichTextLabel.MetaClickedEventHandler e0)
+                castedNode.MetaClicked += e0;
+            if (MetaHoverStarted is Godot.RichTextLabel.MetaHoverStartedEventHandler e1)
+                castedNode.MetaHoverStarted += e1;
+            if (MetaHoverEnded is Godot.RichTextLabel.MetaHoverEndedEventHandler e2)
+                castedNode.MetaHoverEnded += e2;
+            if (Finished is System.Action e3)
+                castedNode.Finished += e3;
         }
     }
 }

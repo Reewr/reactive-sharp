@@ -8,6 +8,7 @@ namespace ReactiveSharpGodot.Components
         public System.Int32? DragMargin { protected get; init; }
         public System.Boolean? TintColorEnabled { protected get; init; }
         public Godot.Color? TintColor { protected get; init; }
+        public System.Action? AutoshrinkChanged { protected get; init; }
 
         public override ReactiveSharpGodot.IGNode Build(System.Collections.Generic.List<ReactiveSharp.Node> builtChildren) => DefaultBuild(new ReactiveSharpGodot.Nodes.GGraphFrame(), builtChildren);
         public override void UpdateProperties(ReactiveSharpGodot.IGNode node)
@@ -26,6 +27,8 @@ namespace ReactiveSharpGodot.Components
                 castedNode.TintColorEnabled = n4;
             if (TintColor is Godot.Color n5)
                 castedNode.TintColor = n5;
+            if (AutoshrinkChanged is System.Action e0)
+                castedNode.AutoshrinkChanged += e0;
         }
     }
 }

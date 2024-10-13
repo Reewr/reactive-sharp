@@ -12,6 +12,10 @@ namespace ReactiveSharpGodot.Components
         public Godot.Shortcut? Shortcut { protected get; init; }
         public System.Boolean? ShortcutFeedback { protected get; init; }
         public System.Boolean? ShortcutInTooltip { protected get; init; }
+        public System.Action? Pressed { protected get; init; }
+        public System.Action? ButtonUp { protected get; init; }
+        public System.Action? ButtonDown { protected get; init; }
+        public Godot.BaseButton.ToggledEventHandler? Toggled { protected get; init; }
 
         public override ReactiveSharpGodot.IGNode Build(System.Collections.Generic.List<ReactiveSharp.Node> builtChildren) => DefaultBuild(new ReactiveSharpGodot.Nodes.GBaseButton(), builtChildren);
         public override void UpdateProperties(ReactiveSharpGodot.IGNode node)
@@ -38,6 +42,14 @@ namespace ReactiveSharpGodot.Components
                 castedNode.ShortcutFeedback = n8;
             if (ShortcutInTooltip is System.Boolean n9)
                 castedNode.ShortcutInTooltip = n9;
+            if (Pressed is System.Action e0)
+                castedNode.Pressed += e0;
+            if (ButtonUp is System.Action e1)
+                castedNode.ButtonUp += e1;
+            if (ButtonDown is System.Action e2)
+                castedNode.ButtonDown += e2;
+            if (Toggled is Godot.BaseButton.ToggledEventHandler e3)
+                castedNode.Toggled += e3;
         }
     }
 }

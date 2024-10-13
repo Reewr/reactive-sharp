@@ -16,6 +16,11 @@ namespace ReactiveSharpGodot.Components
         public Godot.ItemList.IconModeEnum? IconMode { protected get; init; }
         public System.Single? IconScale { protected get; init; }
         public Godot.Vector2I? FixedIconSize { protected get; init; }
+        public Godot.ItemList.ItemSelectedEventHandler? ItemSelected { protected get; init; }
+        public Godot.ItemList.EmptyClickedEventHandler? EmptyClicked { protected get; init; }
+        public Godot.ItemList.ItemClickedEventHandler? ItemClicked { protected get; init; }
+        public Godot.ItemList.MultiSelectedEventHandler? MultiSelected { protected get; init; }
+        public Godot.ItemList.ItemActivatedEventHandler? ItemActivated { protected get; init; }
 
         public override ReactiveSharpGodot.IGNode Build(System.Collections.Generic.List<ReactiveSharp.Node> builtChildren) => DefaultBuild(new ReactiveSharpGodot.Nodes.GItemList(), builtChildren);
         public override void UpdateProperties(ReactiveSharpGodot.IGNode node)
@@ -50,6 +55,16 @@ namespace ReactiveSharpGodot.Components
                 castedNode.IconScale = n12;
             if (FixedIconSize is Godot.Vector2I n13)
                 castedNode.FixedIconSize = n13;
+            if (ItemSelected is Godot.ItemList.ItemSelectedEventHandler e0)
+                castedNode.ItemSelected += e0;
+            if (EmptyClicked is Godot.ItemList.EmptyClickedEventHandler e1)
+                castedNode.EmptyClicked += e1;
+            if (ItemClicked is Godot.ItemList.ItemClickedEventHandler e2)
+                castedNode.ItemClicked += e2;
+            if (MultiSelected is Godot.ItemList.MultiSelectedEventHandler e3)
+                castedNode.MultiSelected += e3;
+            if (ItemActivated is Godot.ItemList.ItemActivatedEventHandler e4)
+                castedNode.ItemActivated += e4;
         }
     }
 }

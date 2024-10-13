@@ -10,6 +10,8 @@ namespace ReactiveSharpGodot.Components
         public Godot.ScrollContainer.ScrollMode? HorizontalScrollMode { protected get; init; }
         public Godot.ScrollContainer.ScrollMode? VerticalScrollMode { protected get; init; }
         public System.Int32? ScrollDeadzone { protected get; init; }
+        public System.Action? ScrollStarted { protected get; init; }
+        public System.Action? ScrollEnded { protected get; init; }
 
         public override ReactiveSharpGodot.IGNode Build(System.Collections.Generic.List<ReactiveSharp.Node> builtChildren) => DefaultBuild(new ReactiveSharpGodot.Nodes.GScrollContainer(), builtChildren);
         public override void UpdateProperties(ReactiveSharpGodot.IGNode node)
@@ -32,6 +34,10 @@ namespace ReactiveSharpGodot.Components
                 castedNode.VerticalScrollMode = n6;
             if (ScrollDeadzone is System.Int32 n7)
                 castedNode.ScrollDeadzone = n7;
+            if (ScrollStarted is System.Action e0)
+                castedNode.ScrollStarted += e0;
+            if (ScrollEnded is System.Action e1)
+                castedNode.ScrollEnded += e1;
         }
     }
 }

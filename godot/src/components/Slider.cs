@@ -6,6 +6,8 @@ namespace ReactiveSharpGodot.Components
         public System.Boolean? Scrollable { protected get; init; }
         public System.Int32? TickCount { protected get; init; }
         public System.Boolean? TicksOnBorders { protected get; init; }
+        public System.Action? DragStarted { protected get; init; }
+        public Godot.Slider.DragEndedEventHandler? DragEnded { protected get; init; }
 
         public override void UpdateProperties(ReactiveSharpGodot.IGNode node)
         {
@@ -19,6 +21,10 @@ namespace ReactiveSharpGodot.Components
                 castedNode.TickCount = n2;
             if (TicksOnBorders is System.Boolean n3)
                 castedNode.TicksOnBorders = n3;
+            if (DragStarted is System.Action e0)
+                castedNode.DragStarted += e0;
+            if (DragEnded is Godot.Slider.DragEndedEventHandler e1)
+                castedNode.DragEnded += e1;
         }
     }
 }

@@ -22,6 +22,10 @@ namespace ReactiveSharpGodot.Components
         public System.Boolean? AutoBraceCompletionEnabled { protected get; init; }
         public System.Boolean? AutoBraceCompletionHighlightMatching { protected get; init; }
         public Godot.Collections.Dictionary? AutoBraceCompletionPairs { protected get; init; }
+        public Godot.CodeEdit.BreakpointToggledEventHandler? BreakpointToggled { protected get; init; }
+        public System.Action? CodeCompletionRequested { protected get; init; }
+        public Godot.CodeEdit.SymbolLookupEventHandler? SymbolLookup { protected get; init; }
+        public Godot.CodeEdit.SymbolValidateEventHandler? SymbolValidate { protected get; init; }
 
         public override ReactiveSharpGodot.IGNode Build(System.Collections.Generic.List<ReactiveSharp.Node> builtChildren) => DefaultBuild(new ReactiveSharpGodot.Nodes.GCodeEdit(), builtChildren);
         public override void UpdateProperties(ReactiveSharpGodot.IGNode node)
@@ -68,6 +72,14 @@ namespace ReactiveSharpGodot.Components
                 castedNode.AutoBraceCompletionHighlightMatching = n18;
             if (AutoBraceCompletionPairs is Godot.Collections.Dictionary n19)
                 castedNode.AutoBraceCompletionPairs = n19;
+            if (BreakpointToggled is Godot.CodeEdit.BreakpointToggledEventHandler e0)
+                castedNode.BreakpointToggled += e0;
+            if (CodeCompletionRequested is System.Action e1)
+                castedNode.CodeCompletionRequested += e1;
+            if (SymbolLookup is Godot.CodeEdit.SymbolLookupEventHandler e2)
+                castedNode.SymbolLookup += e2;
+            if (SymbolValidate is Godot.CodeEdit.SymbolValidateEventHandler e3)
+                castedNode.SymbolValidate += e3;
         }
     }
 }
