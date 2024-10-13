@@ -51,4 +51,6 @@ abstract public class DomNode : ReactiveSharp.Node
 		tree.Append($"</{Name()}>");
 		return tree.ToString();
 	}
+
+	public void Reset() { }
 }

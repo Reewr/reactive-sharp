@@ -142,6 +142,7 @@ public partial class Renderer
 				}
 			}
 
+			node.Reset();
 			nodeComponent.UpdateProperties(node);
 		}
 		else

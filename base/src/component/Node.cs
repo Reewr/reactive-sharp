@@ -57,4 +57,9 @@ public interface Node
 	/// </summary>
 	/// <param name="child"></param>
 	void AddChild(Node child);
+
+	/// <summary>
+	/// Resets the node to its default state.
+	/// </summary>
+	void Reset();
 }
