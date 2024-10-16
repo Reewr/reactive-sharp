@@ -4,7 +4,7 @@ public class P : ReactiveSharp.NodeComponent<PNode>
 {
 	public string Text { get; set; } = "";
 
-	public override PNode Build(List<ReactiveSharp.Node> builtChildren)
+	public override PNode Build(List<ReactiveSharp.INode> builtChildren)
 	{
 		var p = new PNode();
 		UpdateProperties(p);

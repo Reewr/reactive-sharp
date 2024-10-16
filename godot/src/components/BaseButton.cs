@@ -17,7 +17,7 @@ namespace ReactiveSharpGodot.Components
         public System.Action? ButtonDown { protected get; init; }
         public Godot.BaseButton.ToggledEventHandler? Toggled { protected get; init; }
 
-        public override ReactiveSharpGodot.IGNode Build(System.Collections.Generic.List<ReactiveSharp.Node> builtChildren) => DefaultBuild(new ReactiveSharpGodot.Nodes.GBaseButton(), builtChildren);
+        public override ReactiveSharpGodot.IGNode Build(System.Collections.Generic.List<ReactiveSharp.INode> builtChildren) => DefaultBuild(new ReactiveSharpGodot.Nodes.GBaseButton(), builtChildren);
         public override void UpdateProperties(ReactiveSharpGodot.IGNode node)
         {
             var castedNode = (Godot.BaseButton)node.Node;

@@ -6,12 +6,12 @@ using System.Linq;
 
 public partial class Renderer
 {
-	private readonly Node _rootNode;
-	private readonly Dictionary<Component, Node> _componentNodes = new();
+	private readonly INode _rootNode;
+	private readonly Dictionary<Component, INode> _componentNodes = new();
 	private readonly HashSet<Component> _dirtyComponents = new();
 	internal static Renderer? CurrentRenderer;
 
-	public Renderer(Node rootNode)
+	public Renderer(INode rootNode)
 	{
 		_rootNode = rootNode;
 		CurrentRenderer = this;
@@ -49,7 +49,7 @@ public partial class Renderer
 		}
 	}
 
-	private void DiffAndUpdate(Node node, Component? oldComponent, Component? newComponent)
+	private void DiffAndUpdate(INode node, Component? oldComponent, Component? newComponent)
 	{
 		if (newComponent == null)
 		{
@@ -66,9 +66,9 @@ public partial class Renderer
 		UpdateNode(node, newComponent);
 	}
 
-	private Node BuildNode(Component component)
+	private INode BuildNode(Component component)
 	{
-		Node node;
+		INode node;
 		if (component is INodeComponent nodeComponent)
 		{
 			var children = nodeComponent.Children
@@ -91,7 +91,7 @@ public partial class Renderer
 		return node;
 	}
 
-	private void UpdateNode(Node node, Component newlyRenderedComponent)
+	private void UpdateNode(INode node, Component newlyRenderedComponent)
 	{
 		if (newlyRenderedComponent is INodeComponent nodeComponent)
 		{

@@ -7,7 +7,7 @@ namespace ReactiveSharpGodot.Components
         public Godot.AspectRatioContainer.AlignmentMode? AlignmentHorizontal { protected get; init; }
         public Godot.AspectRatioContainer.AlignmentMode? AlignmentVertical { protected get; init; }
 
-        public override ReactiveSharpGodot.IGNode Build(System.Collections.Generic.List<ReactiveSharp.Node> builtChildren) => DefaultBuild(new ReactiveSharpGodot.Nodes.GAspectRatioContainer(), builtChildren);
+        public override ReactiveSharpGodot.IGNode Build(System.Collections.Generic.List<ReactiveSharp.INode> builtChildren) => DefaultBuild(new ReactiveSharpGodot.Nodes.GAspectRatioContainer(), builtChildren);
         public override void UpdateProperties(ReactiveSharpGodot.IGNode node)
         {
             var castedNode = (Godot.AspectRatioContainer)node.Node;

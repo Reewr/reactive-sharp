@@ -27,7 +27,7 @@ namespace ReactiveSharpGodot.Components
         public Godot.CodeEdit.SymbolLookupEventHandler? SymbolLookup { protected get; init; }
         public Godot.CodeEdit.SymbolValidateEventHandler? SymbolValidate { protected get; init; }
 
-        public override ReactiveSharpGodot.IGNode Build(System.Collections.Generic.List<ReactiveSharp.Node> builtChildren) => DefaultBuild(new ReactiveSharpGodot.Nodes.GCodeEdit(), builtChildren);
+        public override ReactiveSharpGodot.IGNode Build(System.Collections.Generic.List<ReactiveSharp.INode> builtChildren) => DefaultBuild(new ReactiveSharpGodot.Nodes.GCodeEdit(), builtChildren);
         public override void UpdateProperties(ReactiveSharpGodot.IGNode node)
         {
             var castedNode = (Godot.CodeEdit)node.Node;

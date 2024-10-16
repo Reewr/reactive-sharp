@@ -2,7 +2,7 @@ using System;
 
 namespace ReactiveSharp;
 
-public interface Node
+public interface INode
 {
 	/// <summary>
 	/// Returns the type of the node that this represents.
@@ -31,7 +31,7 @@ public interface Node
 	///
 	/// In DOM terms, this would be like calling `node.parentNode`.
 	/// </summary>
-	Node? GetParentNode();
+	INode? GetParentNode();
 
 	/// <summary>
 	/// Returns the number of children this node has.
@@ -44,19 +44,19 @@ public interface Node
 	/// </summary>
 	/// <param name="index"></param>
 	/// <returns></returns>
-	Node? GetChild(int index);
+	INode? GetChild(int index);
 
 	/// <summary>
 	/// Removes the given child from the list of children.
 	/// </summary>
 	/// <param name="child"></param>
-	void RemoveChild(Node child);
+	void RemoveChild(INode child);
 
 	/// <summary>
 	/// Adds the given child to the list of children.
 	/// </summary>
 	/// <param name="child"></param>
-	void AddChild(Node child);
+	void AddChild(INode child);
 
 	/// <summary>
 	/// Resets the node to its default state.

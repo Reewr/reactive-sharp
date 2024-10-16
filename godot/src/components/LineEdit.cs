@@ -36,7 +36,7 @@ namespace ReactiveSharpGodot.Components
         public Godot.LineEdit.TextChangeRejectedEventHandler? TextChangeRejected { protected get; init; }
         public Godot.LineEdit.TextSubmittedEventHandler? TextSubmitted { protected get; init; }
 
-        public override ReactiveSharpGodot.IGNode Build(System.Collections.Generic.List<ReactiveSharp.Node> builtChildren) => DefaultBuild(new ReactiveSharpGodot.Nodes.GLineEdit(), builtChildren);
+        public override ReactiveSharpGodot.IGNode Build(System.Collections.Generic.List<ReactiveSharp.INode> builtChildren) => DefaultBuild(new ReactiveSharpGodot.Nodes.GLineEdit(), builtChildren);
         public override void UpdateProperties(ReactiveSharpGodot.IGNode node)
         {
             var castedNode = (Godot.LineEdit)node.Node;

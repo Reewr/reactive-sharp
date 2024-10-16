@@ -13,7 +13,7 @@ namespace ReactiveSharpGodot.Components
         public System.Action? ScrollStarted { protected get; init; }
         public System.Action? ScrollEnded { protected get; init; }
 
-        public override ReactiveSharpGodot.IGNode Build(System.Collections.Generic.List<ReactiveSharp.Node> builtChildren) => DefaultBuild(new ReactiveSharpGodot.Nodes.GScrollContainer(), builtChildren);
+        public override ReactiveSharpGodot.IGNode Build(System.Collections.Generic.List<ReactiveSharp.INode> builtChildren) => DefaultBuild(new ReactiveSharpGodot.Nodes.GScrollContainer(), builtChildren);
         public override void UpdateProperties(ReactiveSharpGodot.IGNode node)
         {
             var castedNode = (Godot.ScrollContainer)node.Node;

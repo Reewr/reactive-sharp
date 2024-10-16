@@ -8,7 +8,7 @@ namespace ReactiveSharpGodot.Components
         public System.Boolean? Vertical { protected get; init; }
         public Godot.SplitContainer.DraggedEventHandler? Dragged { protected get; init; }
 
-        public override ReactiveSharpGodot.IGNode Build(System.Collections.Generic.List<ReactiveSharp.Node> builtChildren) => DefaultBuild(new ReactiveSharpGodot.Nodes.GSplitContainer(), builtChildren);
+        public override ReactiveSharpGodot.IGNode Build(System.Collections.Generic.List<ReactiveSharp.INode> builtChildren) => DefaultBuild(new ReactiveSharpGodot.Nodes.GSplitContainer(), builtChildren);
         public override void UpdateProperties(ReactiveSharpGodot.IGNode node)
         {
             var castedNode = (Godot.SplitContainer)node.Node;

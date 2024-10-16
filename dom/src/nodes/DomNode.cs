@@ -3,12 +3,12 @@
 using System.Text;
 using ReactiveSharp;
 
-abstract public class DomNode : ReactiveSharp.Node
+abstract public class DomNode : ReactiveSharp.INode
 {
 	private readonly List<DomNode> nodes = [];
-	public Node? ParentNode { get; set; }
+	public INode? ParentNode { get; set; }
 
-	public void AddChild(Node child)
+	public void AddChild(INode child)
 	{
 		if (child is not DomNode ch) throw new Exception("Child must be a DomNode");
 		nodes.Add(ch);
@@ -20,15 +20,15 @@ abstract public class DomNode : ReactiveSharp.Node
 		Console.Write("Disposed");
 	}
 
-	public Node? GetChild(int index) => nodes.Count > index && index >= 0 ? nodes[index] : null;
+	public INode? GetChild(int index) => nodes.Count > index && index >= 0 ? nodes[index] : null;
 
 	public int GetChildCount() => nodes.Count;
 
-	public Node? GetParentNode() => ParentNode;
+	public INode? GetParentNode() => ParentNode;
 
 	public void Remove() => ParentNode?.RemoveChild(this);
 
-	public void RemoveChild(Node child)
+	public void RemoveChild(INode child)
 	{
 		if (child is not DomNode ch) throw new Exception("Child must be a DomNode");
 		nodes.Remove(ch);

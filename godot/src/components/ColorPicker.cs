@@ -17,7 +17,7 @@ namespace ReactiveSharpGodot.Components
         public Godot.ColorPicker.PresetAddedEventHandler? PresetAdded { protected get; init; }
         public Godot.ColorPicker.PresetRemovedEventHandler? PresetRemoved { protected get; init; }
 
-        public override ReactiveSharpGodot.IGNode Build(System.Collections.Generic.List<ReactiveSharp.Node> builtChildren) => DefaultBuild(new ReactiveSharpGodot.Nodes.GColorPicker(), builtChildren);
+        public override ReactiveSharpGodot.IGNode Build(System.Collections.Generic.List<ReactiveSharp.INode> builtChildren) => DefaultBuild(new ReactiveSharpGodot.Nodes.GColorPicker(), builtChildren);
         public override void UpdateProperties(ReactiveSharpGodot.IGNode node)
         {
             var castedNode = (Godot.ColorPicker)node.Node;

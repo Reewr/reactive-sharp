@@ -81,7 +81,7 @@ namespace ReactiveSharpGodot.Components
         public System.Action? MinimumSizeChanged { protected get; init; }
         public System.Action? ThemeChanged { protected get; init; }
 
-        protected ReactiveSharpGodot.IGNode DefaultBuild(ReactiveSharpGodot.IGNode node, List<ReactiveSharp.Node> builtChildren)
+        protected ReactiveSharpGodot.IGNode DefaultBuild(ReactiveSharpGodot.IGNode node, List<ReactiveSharp.INode> builtChildren)
         {
             UpdateProperties(node);
             foreach (var child in builtChildren)
@@ -89,7 +89,7 @@ namespace ReactiveSharpGodot.Components
             return node;
         }
 
-        public override ReactiveSharpGodot.IGNode Build(List<ReactiveSharp.Node> builtChildren) => DefaultBuild(new ReactiveSharpGodot.Nodes.GControl(), builtChildren);
+        public override ReactiveSharpGodot.IGNode Build(List<ReactiveSharp.INode> builtChildren) => DefaultBuild(new ReactiveSharpGodot.Nodes.GControl(), builtChildren);
         public override void UpdateProperties(ReactiveSharpGodot.IGNode node)
         {
             var castedNode = (Godot.Control)node.Node;

@@ -23,7 +23,7 @@ namespace ReactiveSharpGodot.Components
         public Godot.TabBar.TabHoveredEventHandler? TabHovered { protected get; init; }
         public Godot.TabBar.ActiveTabRearrangedEventHandler? ActiveTabRearranged { protected get; init; }
 
-        public override ReactiveSharpGodot.IGNode Build(System.Collections.Generic.List<ReactiveSharp.Node> builtChildren) => DefaultBuild(new ReactiveSharpGodot.Nodes.GTabBar(), builtChildren);
+        public override ReactiveSharpGodot.IGNode Build(System.Collections.Generic.List<ReactiveSharp.INode> builtChildren) => DefaultBuild(new ReactiveSharpGodot.Nodes.GTabBar(), builtChildren);
         public override void UpdateProperties(ReactiveSharpGodot.IGNode node)
         {
             var castedNode = (Godot.TabBar)node.Node;

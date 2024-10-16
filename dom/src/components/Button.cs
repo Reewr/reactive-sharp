@@ -4,7 +4,7 @@ public class Button : ReactiveSharp.NodeComponent<ButtonNode>
 {
 	public string Title { get; set; } = "";
 
-	public override ButtonNode Build(List<ReactiveSharp.Node> builtChildren)
+	public override ButtonNode Build(List<ReactiveSharp.INode> builtChildren)
 	{
 		var button = new ButtonNode();
 		UpdateProperties(button);
