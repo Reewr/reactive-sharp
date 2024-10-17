@@ -38,6 +38,12 @@ internal abstract class CodeGenerator
 		BindingFlags.Instance
 	).Where(p => p.CanWrite && !p.Name.StartsWith('_')).ToArray();
 
+	protected static EventInfo[] GetUniqueEvents(Type type, bool includeInheritedEvents = false) => [.. type.GetEvents(
+		(includeInheritedEvents ? BindingFlags.Default : BindingFlags.DeclaredOnly) |
+		BindingFlags.Public |
+		BindingFlags.Instance
+	)];
+
 	public static string ToCode(MemberDeclarationSyntax[] members, string @namespace) =>
 		SyntaxFactory.CompilationUnit()
 			.AddMembers(

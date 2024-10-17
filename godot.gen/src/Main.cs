@@ -18,18 +18,17 @@ public class GodotNodeGeneration
 						   .Where(t => t.IsClass
 									&& t.Namespace == targetNamespace
 									&& commonBaseType.IsAssignableFrom(t)
-									&& t != commonBaseType);
+									&& t != commonBaseType)
+							.Append(typeof(Godot.Control));
 
 		var nodes = derivedTypes
 			.Where(type => !IsIgnored(type))
 			.Select(NodeGenerator.GenerateGodotNode)
-			.Append(NodeGenerator.GetBaseControlNode())
 			.Select(cls => (cls.Identifier.Text, CodeGenerator.ToCode([cls], "ReactiveSharpGodot.Nodes")))
 			.ToArray();
 
 		var components = derivedTypes
 			.Select(ComponentGenerator.GenerateComponent)
-			.Append(ComponentGenerator.GetBaseControlComponent())
 			.Select(cls => (cls.Identifier.Text, CodeGenerator.ToCode([cls], "ReactiveSharpGodot.Components")))
 			.ToArray();
 

@@ -1,7 +1,7 @@
 namespace ReactiveSharpGodot.Nodes
 {
     [PropertyInterceptor]
-    public class GVScrollBar : Godot.VScrollBar, ReactiveSharpGodot.IGNode
+    public class GVScrollBar : Godot.VScrollBar, ReactiveSharpGodot.IGNode<Godot.VScrollBar>
     {
         public Godot.Node Node => this;
     }

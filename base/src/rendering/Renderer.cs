@@ -95,7 +95,7 @@ public partial class Renderer
 	{
 		if (newlyRenderedComponent is INodeComponent nodeComponent)
 		{
-			if (node.GetType() != nodeComponent.NodeType)
+			if (node.GetNodeType() != nodeComponent.NodeType)
 			{
 				var newNode = BuildNode(newlyRenderedComponent);
 				_componentNodes[newlyRenderedComponent] = newNode;

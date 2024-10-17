@@ -1,6 +1,6 @@
 namespace ReactiveSharpGodot.Components
 {
-    public class Control : ReactiveSharp.NodeComponent<ReactiveSharpGodot.IGNode>
+    public class Control : ReactiveSharp.NodeComponent<ReactiveSharpGodot.Nodes.GControl>
     {
         public System.Boolean? ClipContents { protected get; init; }
         public Godot.Vector2? CustomMinimumSize { protected get; init; }
@@ -80,17 +80,34 @@ namespace ReactiveSharpGodot.Components
         public System.Action? SizeFlagsChanged { protected get; init; }
         public System.Action? MinimumSizeChanged { protected get; init; }
         public System.Action? ThemeChanged { protected get; init; }
+        public System.Action? Draw { protected get; init; }
+        public System.Action? VisibilityChanged { protected get; init; }
+        public System.Action? Hidden { protected get; init; }
+        public System.Action? ItemRectChanged { protected get; init; }
+        public System.Action? Ready { protected get; init; }
+        public System.Action? Renamed { protected get; init; }
+        public System.Action? TreeEntered { protected get; init; }
+        public System.Action? TreeExiting { protected get; init; }
+        public System.Action? TreeExited { protected get; init; }
+        public Godot.Node.ChildEnteredTreeEventHandler? ChildEnteredTree { protected get; init; }
+        public Godot.Node.ChildExitingTreeEventHandler? ChildExitingTree { protected get; init; }
+        public System.Action? ChildOrderChanged { protected get; init; }
+        public Godot.Node.ReplacingByEventHandler? ReplacingBy { protected get; init; }
+        public Godot.Node.EditorDescriptionChangedEventHandler? EditorDescriptionChanged { protected get; init; }
+        public System.Action? ScriptChanged { protected get; init; }
+        public System.Action? PropertyListChanged { protected get; init; }
 
-        protected ReactiveSharpGodot.IGNode DefaultBuild(ReactiveSharpGodot.IGNode node, List<ReactiveSharp.INode> builtChildren)
+        public override ReactiveSharpGodot.Nodes.GControl Build(List<ReactiveSharp.INode> builtChildren)
         {
+            var node = new ReactiveSharpGodot.Nodes.GControl();
+            var igNode = (ReactiveSharp.INode)node;
             UpdateProperties(node);
             foreach (var child in builtChildren)
-                node.AddChild(child);
+                igNode.AddChild(child);
             return node;
         }
 
-        public override ReactiveSharpGodot.IGNode Build(List<ReactiveSharp.INode> builtChildren) => DefaultBuild(new ReactiveSharpGodot.Nodes.GControl(), builtChildren);
-        public override void UpdateProperties(ReactiveSharpGodot.IGNode node)
+        public override void UpdateProperties(ReactiveSharpGodot.Nodes.GControl node)
         {
             var castedNode = (Godot.Control)node.Node;
             if (ClipContents is System.Boolean n0)
@@ -249,6 +266,38 @@ namespace ReactiveSharpGodot.Components
                 castedNode.MinimumSizeChanged += e7;
             if (ThemeChanged is System.Action e8)
                 castedNode.ThemeChanged += e8;
+            if (Draw is System.Action e9)
+                castedNode.Draw += e9;
+            if (VisibilityChanged is System.Action e10)
+                castedNode.VisibilityChanged += e10;
+            if (Hidden is System.Action e11)
+                castedNode.Hidden += e11;
+            if (ItemRectChanged is System.Action e12)
+                castedNode.ItemRectChanged += e12;
+            if (Ready is System.Action e13)
+                castedNode.Ready += e13;
+            if (Renamed is System.Action e14)
+                castedNode.Renamed += e14;
+            if (TreeEntered is System.Action e15)
+                castedNode.TreeEntered += e15;
+            if (TreeExiting is System.Action e16)
+                castedNode.TreeExiting += e16;
+            if (TreeExited is System.Action e17)
+                castedNode.TreeExited += e17;
+            if (ChildEnteredTree is Godot.Node.ChildEnteredTreeEventHandler e18)
+                castedNode.ChildEnteredTree += e18;
+            if (ChildExitingTree is Godot.Node.ChildExitingTreeEventHandler e19)
+                castedNode.ChildExitingTree += e19;
+            if (ChildOrderChanged is System.Action e20)
+                castedNode.ChildOrderChanged += e20;
+            if (ReplacingBy is Godot.Node.ReplacingByEventHandler e21)
+                castedNode.ReplacingBy += e21;
+            if (EditorDescriptionChanged is Godot.Node.EditorDescriptionChangedEventHandler e22)
+                castedNode.EditorDescriptionChanged += e22;
+            if (ScriptChanged is System.Action e23)
+                castedNode.ScriptChanged += e23;
+            if (PropertyListChanged is System.Action e24)
+                castedNode.PropertyListChanged += e24;
         }
     }
 }

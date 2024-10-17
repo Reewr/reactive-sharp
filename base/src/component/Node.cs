@@ -8,7 +8,7 @@ public interface INode
 	/// Returns the type of the node that this represents.
 	/// </summary>
 	/// <returns></returns>
-	Type GetType();
+	Type GetNodeType();
 
 	/// <summary>
 	/// This is expected to remove the current node from whatever three

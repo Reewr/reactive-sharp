@@ -9,7 +9,7 @@ internal class NodeGenerator : CodeGenerator
 		var fullTypeName = type.FullName!.Replace("+", ".").Replace(" ", "");
 		return ParseClass(
 				"[PropertyInterceptor]\n" +
-				$"public class G{type.Name} : {fullTypeName}, ReactiveSharpGodot.IGNode {{" +
+				$"public class G{type.Name} : {fullTypeName}, ReactiveSharpGodot.IGNode<{fullTypeName}> {{" +
 					"public Godot.Node Node => this;" +
 				"}"
 		);
