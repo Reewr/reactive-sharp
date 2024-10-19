@@ -13,7 +13,13 @@ internal class ComponentGenerator : CodeGenerator
 			var name = property.Name;
 			var t = GetFullQualifiedTypeName(property.PropertyType).Replace("+", ".").Replace(" ", "");
 			var num = i++;
-			return $"if ({name} is {t} n{num}) castedNode.{name} = n{num};";
+			return string.Join("\n", [
+				$"if ({name} is {t} n{num}) ",
+				"{",
+				$"  NodeStateManager.AddPropertyState(castedNode, \"{name}\", castedNode.{name});",
+				$"  castedNode.{name} = n{num};",
+				"}",
+			]);
 		}).ToArray();
 	}
 
@@ -55,7 +61,13 @@ internal class ComponentGenerator : CodeGenerator
 			var name = e.Name;
 			var handlerType = GetFullQualifiedTypeName(e.EventHandlerType!).Replace("+", ".").Replace(" ", "");
 			var num = i++;
-			return $"if ({name} is {handlerType} e{num}) castedNode.{name} += e{num};";
+			return string.Join("\n", [
+				$"if ({name} is {handlerType} e{num}) ",
+				"{",
+				$"  NodeStateManager.AddEventHandler(castedNode, \"{name}\", e{num});",
+				$"  castedNode.{name} += e{num};",
+				"}",
+			]);
 		}));
 	}
 

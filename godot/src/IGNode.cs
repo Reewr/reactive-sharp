@@ -29,7 +29,7 @@ public interface IGNode<T> : IGNode where T : Godot.Node
 
 	void ReactiveSharp.INode.Reset()
 	{
-		PropertyInterceptorAttribute.Reset(this);
+		NodeStateManager.Reset(this);
 	}
 
 	Type ReactiveSharp.INode.GetNodeType() => typeof(T);

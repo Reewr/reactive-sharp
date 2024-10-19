@@ -14,15 +14,14 @@ public class GodotNodeGeneration
 		Type commonBaseType = typeof(Godot.Control);
 		var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 		var derivedTypes = assemblies
-						   .SelectMany(assembly => assembly.GetTypes())
-						   .Where(t => t.IsClass
-									&& t.Namespace == targetNamespace
-									&& commonBaseType.IsAssignableFrom(t)
-									&& t != commonBaseType)
-							.Append(typeof(Godot.Control));
+			.SelectMany(assembly => assembly.GetTypes())
+			.Where(t => t.IsClass)
+			.Where(t => t.Namespace == targetNamespace)
+			.Where(t => commonBaseType.IsAssignableFrom(t))
+			.Where(t => !IsIgnored(t))
+			.Append(typeof(Godot.Control));
 
 		var nodes = derivedTypes
-			.Where(type => !IsIgnored(type))
 			.Select(NodeGenerator.GenerateGodotNode)
 			.Select(cls => (cls.Identifier.Text, CodeGenerator.ToCode([cls], "ReactiveSharpGodot.Nodes")))
 			.ToArray();
