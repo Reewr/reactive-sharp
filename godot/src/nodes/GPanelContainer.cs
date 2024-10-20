@@ -1,6 +1,6 @@
 namespace ReactiveSharpGodot.Nodes
 {
-    public class GPanelContainer : Godot.PanelContainer, ReactiveSharpGodot.IGNode<Godot.PanelContainer>
+    public class GPanelContainer : Godot.PanelContainer, ReactiveSharpGodot.IGNode
     {
         public Godot.Node Node => this;
     }

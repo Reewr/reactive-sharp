@@ -31,7 +31,6 @@ public partial class Renderer
 
 			_dirtyComponents.Clear();
 		}
-
 	}
 
 	public void Render(Component component)
@@ -95,7 +94,7 @@ public partial class Renderer
 	{
 		if (newlyRenderedComponent is INodeComponent nodeComponent)
 		{
-			if (node.GetNodeType() != nodeComponent.NodeType)
+			if (node.GetType() != nodeComponent.NodeType)
 			{
 				var newNode = BuildNode(newlyRenderedComponent);
 				_componentNodes[newlyRenderedComponent] = newNode;

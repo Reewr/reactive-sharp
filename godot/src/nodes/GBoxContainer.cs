@@ -1,6 +1,6 @@
 namespace ReactiveSharpGodot.Nodes
 {
-    public class GBoxContainer : Godot.BoxContainer, ReactiveSharpGodot.IGNode<Godot.BoxContainer>
+    public class GBoxContainer : Godot.BoxContainer, ReactiveSharpGodot.IGNode
     {
         public Godot.Node Node => this;
     }

@@ -3,15 +3,8 @@
 using System.Text;
 using ReactiveSharp;
 
-abstract public class DomNode<T> : DomNode where T : DomNode<T>
-{
-	public override Type GetNodeType() => typeof(T);
-}
-
 abstract public class DomNode : ReactiveSharp.INode
 {
-	abstract public Type GetNodeType();
-
 	private readonly List<DomNode> nodes = [];
 	public INode? ParentNode { get; set; }
 

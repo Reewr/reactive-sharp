@@ -1,6 +1,6 @@
 namespace ReactiveSharpGodot.Nodes
 {
-    public class GGraphElement : Godot.GraphElement, ReactiveSharpGodot.IGNode<Godot.GraphElement>
+    public class GGraphElement : Godot.GraphElement, ReactiveSharpGodot.IGNode
     {
         public Godot.Node Node => this;
     }

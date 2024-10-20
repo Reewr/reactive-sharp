@@ -3,10 +3,7 @@ namespace ReactiveSharpGodot;
 public interface IGNode : ReactiveSharp.INode
 {
 	public Godot.Node Node { get; }
-}
 
-public interface IGNode<T> : IGNode where T : Godot.Node
-{
 	void ReactiveSharp.INode.AddChild(ReactiveSharp.INode child)
 	{
 		if (child is not IGNode ch) throw new Exception("Child must be a GodotNode");
@@ -31,6 +28,4 @@ public interface IGNode<T> : IGNode where T : Godot.Node
 	{
 		NodeStateManager.Reset(this);
 	}
-
-	Type ReactiveSharp.INode.GetNodeType() => typeof(T);
 }

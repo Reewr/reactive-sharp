@@ -1,6 +1,6 @@
 namespace ReactiveSharpGodot.Nodes
 {
-    public class GHScrollBar : Godot.HScrollBar, ReactiveSharpGodot.IGNode<Godot.HScrollBar>
+    public class GHScrollBar : Godot.HScrollBar, ReactiveSharpGodot.IGNode
     {
         public Godot.Node Node => this;
     }

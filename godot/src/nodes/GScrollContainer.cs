@@ -1,6 +1,6 @@
 namespace ReactiveSharpGodot.Nodes
 {
-    public class GScrollContainer : Godot.ScrollContainer, ReactiveSharpGodot.IGNode<Godot.ScrollContainer>
+    public class GScrollContainer : Godot.ScrollContainer, ReactiveSharpGodot.IGNode
     {
         public Godot.Node Node => this;
     }

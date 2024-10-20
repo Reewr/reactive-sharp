@@ -1,6 +1,6 @@
 namespace ReactiveSharpGodot.Nodes
 {
-    public class GReferenceRect : Godot.ReferenceRect, ReactiveSharpGodot.IGNode<Godot.ReferenceRect>
+    public class GReferenceRect : Godot.ReferenceRect, ReactiveSharpGodot.IGNode
     {
         public Godot.Node Node => this;
     }

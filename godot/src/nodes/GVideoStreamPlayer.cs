@@ -1,6 +1,6 @@
 namespace ReactiveSharpGodot.Nodes
 {
-    public class GVideoStreamPlayer : Godot.VideoStreamPlayer, ReactiveSharpGodot.IGNode<Godot.VideoStreamPlayer>
+    public class GVideoStreamPlayer : Godot.VideoStreamPlayer, ReactiveSharpGodot.IGNode
     {
         public Godot.Node Node => this;
     }

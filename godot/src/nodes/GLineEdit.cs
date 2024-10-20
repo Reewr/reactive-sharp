@@ -1,6 +1,6 @@
 namespace ReactiveSharpGodot.Nodes
 {
-    public class GLineEdit : Godot.LineEdit, ReactiveSharpGodot.IGNode<Godot.LineEdit>
+    public class GLineEdit : Godot.LineEdit, ReactiveSharpGodot.IGNode
     {
         public Godot.Node Node => this;
     }

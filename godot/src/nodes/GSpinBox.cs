@@ -1,6 +1,6 @@
 namespace ReactiveSharpGodot.Nodes
 {
-    public class GSpinBox : Godot.SpinBox, ReactiveSharpGodot.IGNode<Godot.SpinBox>
+    public class GSpinBox : Godot.SpinBox, ReactiveSharpGodot.IGNode
     {
         public Godot.Node Node => this;
     }

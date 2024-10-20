@@ -1,6 +1,6 @@
 namespace ReactiveSharpGodot.Nodes
 {
-    public class GColorRect : Godot.ColorRect, ReactiveSharpGodot.IGNode<Godot.ColorRect>
+    public class GColorRect : Godot.ColorRect, ReactiveSharpGodot.IGNode
     {
         public Godot.Node Node => this;
     }

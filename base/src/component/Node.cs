@@ -5,12 +5,6 @@ namespace ReactiveSharp;
 public interface INode
 {
 	/// <summary>
-	/// Returns the type of the node that this represents.
-	/// </summary>
-	/// <returns></returns>
-	Type GetNodeType();
-
-	/// <summary>
 	/// This is expected to remove the current node from whatever three
 	/// structure it is in. It should not dispose of the node, but rather
 	/// just remove it from the tree.

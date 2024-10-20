@@ -1,6 +1,6 @@
 namespace ReactiveSharp.Dom;
 
-public class ButtonNode : DomNode<ButtonNode>
+public class ButtonNode : DomNode
 {
 	public override string Name() => "button";
 	public override string Content() => Title;

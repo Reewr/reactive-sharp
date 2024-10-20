@@ -1,6 +1,6 @@
 namespace ReactiveSharpGodot.Nodes
 {
-    public class GHSlider : Godot.HSlider, ReactiveSharpGodot.IGNode<Godot.HSlider>
+    public class GHSlider : Godot.HSlider, ReactiveSharpGodot.IGNode
     {
         public Godot.Node Node => this;
     }

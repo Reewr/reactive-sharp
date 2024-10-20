@@ -1,6 +1,6 @@
 namespace ReactiveSharpGodot.Nodes
 {
-    public class GBaseButton : Godot.BaseButton, ReactiveSharpGodot.IGNode<Godot.BaseButton>
+    public class GBaseButton : Godot.BaseButton, ReactiveSharpGodot.IGNode
     {
         public Godot.Node Node => this;
     }
