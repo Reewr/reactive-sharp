@@ -98,8 +98,7 @@ public partial class Renderer
 			{
 				var newNode = BuildNode(newlyRenderedComponent);
 				_componentNodes[newlyRenderedComponent] = newNode;
-				node.GetParentNode()?.AddChild(newNode);
-				node.GetParentNode()?.RemoveChild(node);
+				node.GetParentNode()?.ReplaceChild(node, newNode);
 				node.Dispose();
 				return;
 			}

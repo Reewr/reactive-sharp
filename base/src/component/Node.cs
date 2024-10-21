@@ -41,6 +41,11 @@ public interface INode
 	INode? GetChild(int index);
 
 	/// <summary>
+	/// Replaces the old child with the new child. This function should
+	/// make sure that they keep the same order in the list of children.
+	/// </summary>
+	void ReplaceChild(INode oldChild, INode newChild);
+	/// <summary>
 	/// Removes the given child from the list of children.
 	/// </summary>
 	/// <param name="child"></param>

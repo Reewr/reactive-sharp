@@ -28,6 +28,15 @@ abstract public class DomNode : ReactiveSharp.INode
 
 	public void Remove() => ParentNode?.RemoveChild(this);
 
+	public void ReplaceChild(INode oldChild, INode newChild)
+	{
+		if (oldChild is not DomNode old) throw new Exception("Old child must be a DomNode");
+		if (newChild is not DomNode newC) throw new Exception("New child must be a DomNode");
+		var index = nodes.IndexOf(old);
+		if (index == -1) throw new Exception("Old child not found");
+		nodes[index] = newC;
+	}
+
 	public void RemoveChild(INode child)
 	{
 		if (child is not DomNode ch) throw new Exception("Child must be a DomNode");
