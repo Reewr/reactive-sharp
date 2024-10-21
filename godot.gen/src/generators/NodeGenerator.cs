@@ -8,7 +8,7 @@ internal class NodeGenerator : CodeGenerator
 	{
 		var fullTypeName = type.FullName!.Replace("+", ".").Replace(" ", "");
 		return ParseClass(
-				$"public class G{type.Name} : {fullTypeName}, ReactiveSharpGodot.IGNode {{" +
+				$"public partial class G{type.Name} : {fullTypeName}, ReactiveSharpGodot.IGNode {{" +
 					"public Godot.Node Node => this;" +
 				"}"
 		);

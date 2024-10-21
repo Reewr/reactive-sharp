@@ -1,6 +1,6 @@
 namespace ReactiveSharpGodot.Nodes
 {
-    public class GCenterContainer : Godot.CenterContainer, ReactiveSharpGodot.IGNode
+    public partial class GCenterContainer : Godot.CenterContainer, ReactiveSharpGodot.IGNode
     {
         public Godot.Node Node => this;
     }

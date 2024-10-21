@@ -1,6 +1,6 @@
 namespace ReactiveSharpGodot.Nodes
 {
-    public class GProgressBar : Godot.ProgressBar, ReactiveSharpGodot.IGNode
+    public partial class GProgressBar : Godot.ProgressBar, ReactiveSharpGodot.IGNode
     {
         public Godot.Node Node => this;
     }

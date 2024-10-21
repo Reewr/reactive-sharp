@@ -1,6 +1,6 @@
 namespace ReactiveSharpGodot.Nodes
 {
-    public class GAspectRatioContainer : Godot.AspectRatioContainer, ReactiveSharpGodot.IGNode
+    public partial class GAspectRatioContainer : Godot.AspectRatioContainer, ReactiveSharpGodot.IGNode
     {
         public Godot.Node Node => this;
     }

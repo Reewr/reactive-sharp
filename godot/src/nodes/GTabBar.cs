@@ -1,6 +1,6 @@
 namespace ReactiveSharpGodot.Nodes
 {
-    public class GTabBar : Godot.TabBar, ReactiveSharpGodot.IGNode
+    public partial class GTabBar : Godot.TabBar, ReactiveSharpGodot.IGNode
     {
         public Godot.Node Node => this;
     }
