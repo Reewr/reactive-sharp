@@ -1,14 +1,10 @@
 namespace ReactiveSharpGodotTest;
 
-using Godot;
-
-public partial class Test : Control
+public partial class Test : ReactiveSharpGodot.Renderer
 {
-	private ReactiveSharpGodot.GodotComponentRenderer renderer = new();
-
-	public override void _EnterTree()
+	public override void _Ready()
 	{
-		AddChild(renderer);
-		renderer.Render(new MyComponent());
+		base._Ready();
+		Render(new MyComponent());
 	}
 }

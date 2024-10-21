@@ -1,3 +1,5 @@
+namespace ReactiveSharpGodot;
+
 class NodeStateManager
 {
 	public static NodeStateManager CurrentManager { get; } = new NodeStateManager();
