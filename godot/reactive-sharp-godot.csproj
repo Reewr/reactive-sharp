@@ -7,6 +7,6 @@
     <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\base\reactive-sharp.csproj" />
+    <ProjectReference Include="../base/reactive-sharp.csproj" />
   </ItemGroup>
 </Project>
