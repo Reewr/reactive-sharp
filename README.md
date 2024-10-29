@@ -55,10 +55,19 @@ to re-render when the it changes.
 
 ```csharp
 
+class Theme {
+	public Color BackgroundColor { get; set; }
+	public Color ForegroundColor { get; set; }
+}
+
+class ThemeProvider(MyTheme theme) : ContextProvider<Theme>(theme) {
+}
+
 class MyComponent : Component
 {
 	public override Component Render() {
 		State<int> count = UseState(0);
+		Theme theme = UseContext<ThemeProvider, Theme>();
 
 		return new VBoxContainer()
 		{
@@ -68,6 +77,21 @@ class MyComponent : Component
 				Text = "Increment the count",
 				OnPressed = () => count.Value++
 			}
+		};
+	}
+}
+
+class MyApp : Component
+{
+	public override Component Render() {
+		var theme = new Theme() {
+			BackgroundColor = Colors.White,
+			ForegroundColor = Colors.Black
+		};
+
+		return new ThemeProvider(theme)
+		{
+			new MyComponent()
 		};
 	}
 }

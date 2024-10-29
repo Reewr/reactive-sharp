@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\base\reactive-sharp.csproj" />
-    <ProjectReference Include="..\dom\reactive-sharp-dom.csproj" />
+    <ProjectReference Include="../base/reactive-sharp.csproj" />
+    <ProjectReference Include="../dom/reactive-sharp-dom.csproj" />
   </ItemGroup>
 </Project>

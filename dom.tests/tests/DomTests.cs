@@ -10,6 +10,7 @@ public partial class DomTests
         yield return new object[] { new SimpleComponentTest() };
         yield return new object[] { new SimpleStateComponentTest() };
         yield return new object[] { new NodeReplacementCompontentTest() };
+        yield return new object[] { new SimpleContextComponentTest() };
     }
 
     [Theory]

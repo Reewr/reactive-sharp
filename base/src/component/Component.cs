@@ -16,9 +16,14 @@ public abstract class Component : IEnumerable
 	public string? Key { set => _componentId = value ?? _componentId; }
 	public List<Component> Children { get; set; } = new List<Component>();
 
+	internal WeakReference<Component>? Parent { get; set; }
+
 	protected Component([CallerMemberName] string memberName = "", [CallerLineNumber] int lineNumber = 0)
 	{
 		_componentId = $"{GetFullTypeName()}:{memberName}:{lineNumber}";
+		Parent = Renderer.CurrentRenderer?.CurrentRenderingComponent is Component parent
+			? new WeakReference<Component>(parent)
+			: null;
 	}
 
 	public abstract Component Render();
@@ -31,6 +36,8 @@ public abstract class Component : IEnumerable
 	internal Component RenderWithReset()
 	{
 		_stateIndex = 0;
+		if (Renderer.CurrentRenderer != null)
+			Renderer.CurrentRenderer.CurrentRenderingComponent = this;
 		return Render();
 	}
 
@@ -42,9 +49,27 @@ public abstract class Component : IEnumerable
 		return StateManager.GetState(this, _componentId, currentIndex, initialValue);
 	}
 
-	public void Add(Component component) => Children.Add(component);
-	public void Add(params Component[] components) => Children.AddRange(components);
-	public void Add(List<Component> components) => Children.AddRange(components);
+	protected T UseContext<C, T>() where C : ContextProvider<T>
+	{
+		return ContextManager.GetContext<C, T>(this).GetContextValue();
+	}
+
+	public void Add(Component component)
+	{
+		Children.Add(component);
+		component.Parent = new WeakReference<Component>(this);
+	}
+
+	public void Add(params Component[] components)
+	{
+		foreach (var component in components)
+			Add(component);
+	}
+	public void Add(List<Component> components)
+	{
+		foreach (var component in components)
+			Add(component);
+	}
 
 	public IEnumerator GetEnumerator() => Children.GetEnumerator();
 }

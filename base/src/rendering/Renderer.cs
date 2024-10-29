@@ -10,6 +10,7 @@ public partial class Renderer
 	private readonly Dictionary<Component, INode> _componentNodes = new();
 	private readonly HashSet<Component> _dirtyComponents = new();
 	internal static Renderer? CurrentRenderer;
+	internal Component? CurrentRenderingComponent { get; set; }
 
 	public Renderer(INode rootNode)
 	{
