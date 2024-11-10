@@ -91,7 +91,11 @@ class MyApp : Component
 
 		return new ThemeProvider(theme)
 		{
-			new MyComponent()
+			new Fragment() {
+				new MyComponent(),
+				new VerticalSeparator(),
+				new MyComponent()
+			}
 		};
 	}
 }
