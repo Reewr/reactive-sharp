@@ -132,8 +132,6 @@ public partial class Renderer
 
 	private void UpdateNode(Queue<INode> nodes, Component newlyRenderedComponent)
 	{
-		Console.WriteLine($"Nodes{nodes.Count}: {string.Join(", ", nodes.Select(n => n))}");
-		Console.WriteLine($"Newly Rendered Component: {newlyRenderedComponent}");
 		if (newlyRenderedComponent is INodeComponent nodeComponent)
 		{
 			var node = nodes.Dequeue();
