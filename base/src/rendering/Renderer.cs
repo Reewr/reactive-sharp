@@ -4,10 +4,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+/***
+ *
+ * The Renderer class is responsible for turning a Component into a tree of INode objects.
+ * It keeps track of the root node and the nodes for each component, and
+ * updates or builds the nodes when a component is rendered.
+ *
+ *
+ *
+ */
 public partial class Renderer
 {
 	private readonly INode _rootNode;
-	private readonly Dictionary<Component, INode> _componentNodes = new();
+	private readonly Dictionary<Component, INode[]> _componentNodes = new();
 	private readonly HashSet<Component> _dirtyComponents = new();
 	internal static Renderer? CurrentRenderer;
 	internal Component? CurrentRenderingComponent { get; set; }
@@ -37,42 +46,42 @@ public partial class Renderer
 	public void Render(Component component)
 	{
 		var renderedComponent = component.RenderWithReset();
-		if (_componentNodes.TryGetValue(component, out var node))
+		if (_componentNodes.TryGetValue(component, out var nodes))
 		{
-			UpdateNode(node, renderedComponent);
+			UpdateNode(new Queue<INode>(nodes), renderedComponent);
 		}
 		else
 		{
-			node = BuildNode(renderedComponent);
-			_rootNode.AddChild(node);
-			_componentNodes[component] = node;
+			nodes = BuildNode(renderedComponent);
+			foreach (var builtNode in nodes)
+				_rootNode.AddChild(builtNode);
+			_componentNodes[component] = nodes;
 		}
 	}
 
-	private void DiffAndUpdate(INode node, Component? oldComponent, Component? newComponent)
+	private void DiffAndUpdate(Queue<INode> nodes, Component? oldComponent, Component? newComponent)
 	{
 		if (newComponent == null)
 		{
 			if (oldComponent != null)
 			{
+				var node = nodes.Dequeue();
 				node.Remove();
-				node.GetParentNode()?.RemoveChild(node);
 				node.Dispose();
 			}
 			return;
 		}
 
 		// Update node properties
-		UpdateNode(node, newComponent);
+		UpdateNode(nodes, newComponent);
 	}
 
-	private INode BuildNode(Component component)
+	private INode[] BuildNode(Component component)
 	{
-		INode node;
 		if (component is INodeComponent nodeComponent)
 		{
 			var children = nodeComponent.Children
-				.Select(child =>
+				.SelectMany(child =>
 				{
 					var innerNode = BuildNode(child);
 					_componentNodes[child] = innerNode;
@@ -80,31 +89,67 @@ public partial class Renderer
 				})
 				.ToList();
 
-			node = nodeComponent.Build(children);
+			var node = nodeComponent.Build(children);
+			_componentNodes[component] = new[] { node };
+			return new[] { node };
+		}
+		else if (component is Fragment fragment)
+		{
+			var children = fragment.Children
+				.SelectMany(child =>
+				{
+					var innerNode = BuildNode(child);
+					_componentNodes[child] = innerNode;
+					return innerNode;
+				})
+				.ToArray();
+
+			_componentNodes[component] = children;
+			return children;
 		}
 		else
 		{
-			var renderedComponent = component.RenderWithReset();
-			node = BuildNode(renderedComponent);
-		}
 
-		return node;
+			var renderedComponent = component.RenderWithReset();
+			var nodes = BuildNode(renderedComponent);
+			_componentNodes[component] = nodes;
+			return nodes;
+		}
 	}
 
-	private void UpdateNode(INode node, Component newlyRenderedComponent)
+	private IEnumerable<Component> FlattenFragment(Component component)
 	{
+		if (component is not Fragment fragment)
+			return new[] { component };
+
+		return fragment.Children.SelectMany(child =>
+		{
+			if (child is Fragment innerFragment)
+				return FlattenFragment(innerFragment);
+			return new[] { child };
+		});
+	}
+
+	private void UpdateNode(Queue<INode> nodes, Component newlyRenderedComponent)
+	{
+		Console.WriteLine($"Nodes{nodes.Count}: {string.Join(", ", nodes.Select(n => n))}");
+		Console.WriteLine($"Newly Rendered Component: {newlyRenderedComponent}");
 		if (newlyRenderedComponent is INodeComponent nodeComponent)
 		{
+			var node = nodes.Dequeue();
 			if (node.GetType() != nodeComponent.NodeType)
 			{
 				var newNode = BuildNode(newlyRenderedComponent);
+				if (newNode.Length != 1)
+					throw new InvalidOperationException("Expected a single node");
 				_componentNodes[newlyRenderedComponent] = newNode;
-				node.GetParentNode()?.ReplaceChild(node, newNode);
+				node.GetParentNode()?.ReplaceChild(node, newNode[0]);
 				node.Dispose();
 				return;
 			}
 
-			int childCount = nodeComponent.Children.Count();
+			var nodeComponentChildren = nodeComponent.Children.SelectMany(FlattenFragment).ToList();
+			int childCount = nodeComponentChildren.Count;
 			int nodeChildCount = node.GetChildCount();
 
 			// Remove extra nodes
@@ -118,25 +163,30 @@ public partial class Renderer
 			// Update existing or add new nodes
 			for (int i = 0; i < childCount; i++)
 			{
-				var childComponent = nodeComponent.Children[i];
+				var childComponent = nodeComponentChildren[i];
 
 				if (i < nodeChildCount)
 				{
+					var queue = new Queue<INode>();
+					queue.Enqueue(node.GetChild(i) ?? throw new InvalidOperationException("Child node is null"));
+					queue = new Queue<INode>(queue.Concat(nodes));
 					DiffAndUpdate(
-						node.GetChild(i) ?? throw new InvalidOperationException("Child node is null"),
+						queue,
 						null,
 						childComponent
 					);
 				}
 				else
 				{
-					_componentNodes.TryGetValue(childComponent, out var existingNode);
-					if (existingNode is not null)
-						DiffAndUpdate(existingNode, null, childComponent);
+					_componentNodes.TryGetValue(childComponent, out var existingNodes);
+					if (existingNodes is not null)
+						DiffAndUpdate(new Queue<INode>(existingNodes), null, childComponent);
 					else
 					{
 						var newChildNode = BuildNode(childComponent);
-						node.AddChild(newChildNode);
+						_componentNodes[childComponent] = newChildNode;
+						foreach (var newChild in newChildNode)
+							node.AddChild(newChild);
 					}
 				}
 			}
@@ -144,11 +194,18 @@ public partial class Renderer
 			node.Reset();
 			nodeComponent.UpdateProperties(node);
 		}
+		else if (newlyRenderedComponent is Fragment fragment)
+		{
+			foreach (var child in fragment.Children)
+			{
+				UpdateNode(nodes, child);
+			}
+		}
 		else
 		{
 			// Handle custom components
 			var renderedComponent = newlyRenderedComponent.RenderWithReset();
-			UpdateNode(node, renderedComponent);
+			UpdateNode(nodes, renderedComponent);
 		}
 	}
 }
