@@ -53,20 +53,26 @@ to re-render when the it changes.
 
 ### Example
 
-```csharp
+This example assumes that the following components have been made available
+through other means:
 
+-   `VBoxContainer`
+-   `Label`
+-   `Button`
+-   `VerticalSeparator`
+
+```csharp
 class Theme {
 	public Color BackgroundColor { get; set; }
 	public Color ForegroundColor { get; set; }
 }
 
-class ThemeProvider(MyTheme theme) : ContextProvider<Theme>(theme) {
-}
+class ThemeProvider(MyTheme theme) : ReactiveSharp.ContextProvider<Theme>(theme) { }
 
-class MyComponent : Component
+class MyComponent : ReactiveSharp.Component
 {
-	public override Component Render() {
-		State<int> count = UseState(0);
+	public override ReactiveSharp.Component Render() {
+		ReactiveSharp.State<int> count = UseState(0);
 		Theme theme = UseContext<ThemeProvider, Theme>();
 
 		return new VBoxContainer()
@@ -81,9 +87,9 @@ class MyComponent : Component
 	}
 }
 
-class MyApp : Component
+class MyApp : ReactiveSharp.Component
 {
-	public override Component Render() {
+	public override ReactiveSharp.Component Render() {
 		var theme = new Theme() {
 			BackgroundColor = Colors.White,
 			ForegroundColor = Colors.Black
@@ -91,7 +97,7 @@ class MyApp : Component
 
 		return new ThemeProvider(theme)
 		{
-			new Fragment() {
+			new ReactiveSharp.Fragment() {
 				new MyComponent(),
 				new VerticalSeparator(),
 				new MyComponent()
