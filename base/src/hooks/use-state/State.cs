@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace ReactiveSharp;
 
 public class State<T> : StateBase
@@ -8,6 +10,9 @@ public class State<T> : StateBase
 		get => _value;
 		set
 		{
+			if (EqualityComparer<T>.Default.Equals(_value, value))
+				return;
+
 			_value = value;
 			_onStateChanged();
 		}
