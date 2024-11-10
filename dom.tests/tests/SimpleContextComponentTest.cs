@@ -9,10 +9,7 @@ class MyTheme
 	public string Color { get; set; } = "red";
 }
 
-internal class MyContext(MyTheme value) : ContextProvider<MyTheme>(value)
-{
-	public override Component Render() => new Div { Children = Children };
-}
+internal class MyContext(MyTheme value) : ContextProvider<MyTheme>(value) { }
 
 internal class MyComponentUsingContext : Component
 {
@@ -37,7 +34,7 @@ internal class SimpleContextComponentTest : Component, ITestRunWithActionAfter<S
 		};
 	}
 
-	public static string Expected => "<div><div><p>Hello, the world is blue</p></div></div>";
+	public static string Expected => "<div><p>Hello, the world is blue</p></div>";
 
 	public static Action<SimpleContextComponentTest>? ActionAfter => (SimpleContextComponentTest test) =>
 	{
