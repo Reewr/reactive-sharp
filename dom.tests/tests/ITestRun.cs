@@ -1,7 +1,3 @@
-
-using ReactiveSharp;
-using ReactiveSharp.Dom;
-
 namespace ReactiveSharp.Dom.Tests;
 
 public interface ITestRunBase
@@ -20,7 +16,9 @@ public interface ITestRunWithActionsBeforeAndAndAfter<T> : ITestRunBase where T 
 		T.ActionBefore?.Invoke(component);
 		renderer.Render(component);
 		T.ActionAfter?.Invoke(component);
-		renderer.RenderRequested();
+
+		while (renderer.RenderingRequested())
+			renderer.RenderRequested();
 
 		// since we inject a div node, the actual result is the first child of the div node
 		var renderedNode = dom.GetChild(0);
