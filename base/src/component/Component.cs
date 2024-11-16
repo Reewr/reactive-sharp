@@ -49,6 +49,18 @@ public abstract class Component : IEnumerable
 		return StateManager.GetState(this, _componentId, currentIndex, initialValue);
 	}
 
+	protected void UseEffect(Func<Action> callback, params object[] dependencies)
+	{
+		int currentIndex = _stateIndex++;
+		EffectManager.StoreEffect(_componentId, currentIndex, callback, dependencies);
+	}
+
+	protected void UseEffect(Action callback, params object[] dependencies)
+	{
+		int currentIndex = _stateIndex++;
+		EffectManager.StoreEffect(_componentId, currentIndex, callback, dependencies);
+	}
+
 	protected T UseContext<C, T>() where C : ContextProvider<T>
 	{
 		return ContextManager.GetContext<C, T>(this).GetContextValue();
@@ -65,6 +77,7 @@ public abstract class Component : IEnumerable
 		foreach (var component in components)
 			Add(component);
 	}
+
 	public void Add(List<Component> components)
 	{
 		foreach (var component in components)

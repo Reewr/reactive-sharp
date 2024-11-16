@@ -2,9 +2,9 @@ using System.Collections.Generic;
 
 namespace ReactiveSharp;
 
-public class State<T> : StateBase
+public class State<T>(T value, System.Action onStateChanged) : StateBase
 {
-	private T _value;
+	private T _value = value;
 	public T Value
 	{
 		get => _value;
@@ -17,13 +17,8 @@ public class State<T> : StateBase
 			_onStateChanged();
 		}
 	}
-	private readonly System.Action _onStateChanged;
-
-	public State(T value, System.Action onStateChanged)
-	{
-		_value = value;
-		_onStateChanged = onStateChanged;
-	}
+	private readonly System.Action _onStateChanged = onStateChanged;
 
 	public void SetValue(T value) => Value = value;
+	internal override object? GetValueAsObject() => Value;
 }

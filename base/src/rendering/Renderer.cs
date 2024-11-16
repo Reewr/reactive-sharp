@@ -32,18 +32,24 @@ public partial class Renderer
 
 	public void RenderRequested()
 	{
-		if (_dirtyComponents.Count > 0)
+		if (RenderingRequested())
 		{
 			foreach (var dirtyComponent in _dirtyComponents)
 			{
-				Render(dirtyComponent);
+				Render(dirtyComponent, false);
 			}
 
 			_dirtyComponents.Clear();
+			EffectManager.RunAllEffects();
 		}
 	}
 
-	public void Render(Component component)
+	public bool RenderingRequested()
+	{
+		return _dirtyComponents.Count > 0;
+	}
+
+	private void Render(Component component, bool triggerEffects = true)
 	{
 		var renderedComponent = component.RenderWithReset();
 		if (_componentNodes.TryGetValue(component, out var nodes))
@@ -57,6 +63,14 @@ public partial class Renderer
 				_rootNode.AddChild(builtNode);
 			_componentNodes[component] = nodes;
 		}
+
+		if (triggerEffects)
+			EffectManager.RunAllEffects();
+	}
+
+	public void Render(Component component)
+	{
+		Render(component, true);
 	}
 
 	private void DiffAndUpdate(Queue<INode> nodes, Component? oldComponent, Component? newComponent)
