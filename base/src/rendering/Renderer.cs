@@ -95,6 +95,7 @@ public partial class Renderer
 		if (component is INodeComponent nodeComponent)
 		{
 			var children = nodeComponent.Children
+				.OfType<Component>()
 				.SelectMany(child =>
 				{
 					var innerNode = BuildNode(child);
@@ -110,6 +111,7 @@ public partial class Renderer
 		else if (component is Fragment fragment)
 		{
 			var children = fragment.Children
+				.OfType<Component>()
 				.SelectMany(child =>
 				{
 					var innerNode = BuildNode(child);
@@ -138,6 +140,7 @@ public partial class Renderer
 
 		return fragment
 			.Children
+			.OfType<Component>()
 			.SelectMany(child =>
 			{
 				if (child is Fragment innerFragment)
@@ -162,7 +165,11 @@ public partial class Renderer
 				return;
 			}
 
-			var nodeComponentChildren = nodeComponent.Children.SelectMany(FlattenFragment).ToList();
+			var nodeComponentChildren = nodeComponent
+				.Children
+				.OfType<Component>()
+				.SelectMany(FlattenFragment)
+				.ToList();
 			int childCount = nodeComponentChildren.Count;
 			int nodeChildCount = node.GetChildCount();
 
@@ -210,7 +217,7 @@ public partial class Renderer
 		}
 		else if (newlyRenderedComponent is Fragment fragment)
 		{
-			foreach (var child in fragment.Children)
+			foreach (var child in fragment.Children.OfType<Component>())
 			{
 				UpdateNode(nodes, child);
 			}

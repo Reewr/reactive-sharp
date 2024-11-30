@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public interface INodeComponent
 {
-	public List<Component> Children { get; }
+	public List<Component?> Children { get; }
 	public INode Build(List<INode> builtChildren);
 	public void UpdateProperties(INode node);
 	public Type NodeType { get; }
