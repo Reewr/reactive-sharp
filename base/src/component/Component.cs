@@ -14,7 +14,7 @@ public abstract class Component : IEnumerable
 	private string _componentId;
 
 	public string? Key { set => _componentId = value ?? _componentId; }
-	public List<Component> Children { get; set; } = new List<Component>();
+	public List<Component> Children { get; set; } = [];
 
 	internal WeakReference<Component>? Parent { get; set; }
 

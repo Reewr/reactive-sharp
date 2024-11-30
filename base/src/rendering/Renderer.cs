@@ -16,8 +16,8 @@ using System.Linq;
 public partial class Renderer
 {
 	private readonly INode _rootNode;
-	private readonly Dictionary<Component, INode[]> _componentNodes = new();
-	private readonly HashSet<Component> _dirtyComponents = new();
+	private readonly Dictionary<Component, INode[]> _componentNodes = [];
+	private readonly HashSet<Component> _dirtyComponents = [];
 	internal static Renderer? CurrentRenderer;
 	internal Component? CurrentRenderingComponent { get; set; }
 
@@ -104,8 +104,8 @@ public partial class Renderer
 				.ToList();
 
 			var node = nodeComponent.Build(children);
-			_componentNodes[component] = new[] { node };
-			return new[] { node };
+			_componentNodes[component] = [node];
+			return [node];
 		}
 		else if (component is Fragment fragment)
 		{
@@ -134,14 +134,16 @@ public partial class Renderer
 	private IEnumerable<Component> FlattenFragment(Component component)
 	{
 		if (component is not Fragment fragment)
-			return new[] { component };
+			return [component];
 
-		return fragment.Children.SelectMany(child =>
-		{
-			if (child is Fragment innerFragment)
-				return FlattenFragment(innerFragment);
-			return new[] { child };
-		});
+		return fragment
+			.Children
+			.SelectMany(child =>
+			{
+				if (child is Fragment innerFragment)
+					return FlattenFragment(innerFragment);
+				return [child];
+			});
 	}
 
 	private void UpdateNode(Queue<INode> nodes, Component newlyRenderedComponent)

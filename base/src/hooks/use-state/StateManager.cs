@@ -4,13 +4,13 @@ using System.Collections.Generic;
 
 public static class StateManager
 {
-	private static readonly Dictionary<string, List<StateBase?>> StateStore = new();
+	private static readonly Dictionary<string, List<StateBase?>> StateStore = [];
 
 	public static State<T> GetState<T>(Component component, string componentId, int stateIndex, T initialValue)
 	{
 		if (!StateStore.TryGetValue(componentId, out var componentStates))
 		{
-			componentStates = new List<StateBase?>();
+			componentStates = [];
 			StateStore[componentId] = componentStates;
 		}
 
