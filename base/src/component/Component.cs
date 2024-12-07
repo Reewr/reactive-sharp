@@ -43,25 +43,25 @@ public abstract class Component : IEnumerable
 
 	private string GetFullTypeName() => GetType().FullName ?? "UnknownType";
 
-	protected State<T> UseState<T>(T initialValue)
+	public State<T> UseState<T>(T initialValue)
 	{
 		int currentIndex = _stateIndex++;
 		return StateManager.GetState(this, _componentId, currentIndex, initialValue);
 	}
 
-	protected void UseEffect(Func<Action> callback, params object[] dependencies)
+	public void UseEffect(Func<Action> callback, params object[] dependencies)
 	{
 		int currentIndex = _stateIndex++;
 		EffectManager.StoreEffect(_componentId, currentIndex, callback, dependencies);
 	}
 
-	protected void UseEffect(Action callback, params object[] dependencies)
+	public void UseEffect(Action callback, params object[] dependencies)
 	{
 		int currentIndex = _stateIndex++;
 		EffectManager.StoreEffect(_componentId, currentIndex, callback, dependencies);
 	}
 
-	protected T UseContext<C, T>() where C : ContextProvider<T>
+	public T UseContext<C, T>() where C : ContextProvider<T>
 	{
 		return ContextManager.GetContext<C, T>(this).GetContextValue();
 	}
