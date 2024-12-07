@@ -54,7 +54,8 @@ public partial class Renderer
 		var renderedComponent = component.RenderWithReset();
 		if (_componentNodes.TryGetValue(component, out var nodes))
 		{
-			UpdateNode(new Queue<INode>(nodes), renderedComponent);
+			nodes = UpdateNode(new Queue<INode>(nodes), renderedComponent, nodes[0].GetParentNode()!);
+			_componentNodes[component] = nodes;
 		}
 		else
 		{
@@ -73,7 +74,7 @@ public partial class Renderer
 		Render(component, true);
 	}
 
-	private void DiffAndUpdate(Queue<INode> nodes, Component? oldComponent, Component? newComponent)
+	private void DiffAndUpdate(Queue<INode> nodes, Component? oldComponent, Component? newComponent, INode parent)
 	{
 		if (newComponent == null)
 		{
@@ -87,7 +88,7 @@ public partial class Renderer
 		}
 
 		// Update node properties
-		UpdateNode(nodes, newComponent);
+		UpdateNode(nodes, newComponent, parent);
 	}
 
 	private INode[] BuildNode(Component component)
@@ -149,7 +150,7 @@ public partial class Renderer
 			});
 	}
 
-	private void UpdateNode(Queue<INode> nodes, Component newlyRenderedComponent)
+	private INode[] UpdateNode(Queue<INode> nodes, Component newlyRenderedComponent, INode parent)
 	{
 		if (newlyRenderedComponent is INodeComponent nodeComponent)
 		{
@@ -160,9 +161,10 @@ public partial class Renderer
 				if (newNode.Length != 1)
 					throw new InvalidOperationException("Expected a single node");
 				_componentNodes[newlyRenderedComponent] = newNode;
-				node.GetParentNode()?.ReplaceChild(node, newNode[0]);
+				parent.AddChild(newNode[0]);
+				parent.RemoveChild(node);
 				node.Dispose();
-				return;
+				return newNode;
 			}
 
 			var nodeComponentChildren = nodeComponent
@@ -194,14 +196,15 @@ public partial class Renderer
 					DiffAndUpdate(
 						queue,
 						null,
-						childComponent
+						childComponent,
+						node
 					);
 				}
 				else
 				{
 					_componentNodes.TryGetValue(childComponent, out var existingNodes);
 					if (existingNodes is not null)
-						DiffAndUpdate(new Queue<INode>(existingNodes), null, childComponent);
+						DiffAndUpdate(new Queue<INode>(existingNodes), null, childComponent, node);
 					else
 					{
 						var newChildNode = BuildNode(childComponent);
@@ -214,19 +217,22 @@ public partial class Renderer
 
 			node.Reset();
 			nodeComponent.UpdateProperties(node);
+			return [node];
 		}
 		else if (newlyRenderedComponent is Fragment fragment)
 		{
-			foreach (var child in fragment.Children.OfType<Component>())
-			{
-				UpdateNode(nodes, child);
-			}
+			return fragment
+				.Children
+				.OfType<Component>()
+				.Select(child => UpdateNode(nodes, child, parent))
+				.SelectMany(x => x)
+				.ToArray();
 		}
 		else
 		{
 			// Handle custom components
 			var renderedComponent = newlyRenderedComponent.RenderWithReset();
-			UpdateNode(nodes, renderedComponent);
+			return UpdateNode(nodes, renderedComponent, parent);
 		}
 	}
 }
