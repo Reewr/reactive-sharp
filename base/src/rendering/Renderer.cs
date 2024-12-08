@@ -52,7 +52,7 @@ public partial class Renderer
 	private void Render(Component component, bool triggerEffects = true)
 	{
 		var renderedComponent = component.RenderWithReset();
-		if (_componentNodes.TryGetValue(component, out var nodes))
+		if (_componentNodes.TryGetValue(component, out var nodes) && nodes.Length != 0)
 		{
 			nodes = UpdateNode(new Queue<INode>(nodes), renderedComponent, nodes[0].GetParentNode()!);
 			_componentNodes[component] = nodes;
