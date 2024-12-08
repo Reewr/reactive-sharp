@@ -28,13 +28,11 @@ public class ContextManager
 [Serializable]
 internal class ContextNotFoundException<C, T> : Exception where C : ContextProvider<T>
 {
-	public ContextNotFoundException()
-	{
-	}
+	public ContextNotFoundException() : base($"Unable to find the context provider {typeof(C).Name}<{typeof(T).Name}>") { }
 
-	public ContextNotFoundException(string? message) : base(message)
-	{
-	}
+	public ContextNotFoundException(string? message) : base(message) { }
+
+
 
 	public ContextNotFoundException(string? message, Exception? innerException) : base(message, innerException)
 	{
