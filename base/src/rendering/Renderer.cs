@@ -160,7 +160,6 @@ public partial class Renderer
 				var newNode = BuildNode(newlyRenderedComponent);
 				if (newNode.Length != 1)
 					throw new InvalidOperationException("Expected a single node");
-				_componentNodes[newlyRenderedComponent] = newNode;
 				parent.AddChild(newNode[0]);
 				parent.RemoveChild(node);
 				node.Dispose();
@@ -202,13 +201,11 @@ public partial class Renderer
 				}
 				else
 				{
-					_componentNodes.TryGetValue(childComponent, out var existingNodes);
-					if (existingNodes is not null)
+					if (_componentNodes.TryGetValue(childComponent, out var existingNodes))
 						DiffAndUpdate(new Queue<INode>(existingNodes), null, childComponent, node);
 					else
 					{
 						var newChildNode = BuildNode(childComponent);
-						_componentNodes[childComponent] = newChildNode;
 						foreach (var newChild in newChildNode)
 							node.AddChild(newChild);
 					}
