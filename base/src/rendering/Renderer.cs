@@ -30,6 +30,7 @@ public partial class Renderer
 	private readonly INode _rootNode;
 	private readonly Dictionary<Component, INode[]> _componentNodes = [];
 	private readonly HashSet<Component> _dirtyComponents = [];
+	private readonly HashSet<INode> disposedNodes = [];
 	private readonly EffectManager EffectManager = new();
 	private readonly StateManager StateManager;
 
@@ -61,6 +62,7 @@ public partial class Renderer
 			}
 
 			_dirtyComponents.Clear();
+			Cleanup();
 			EffectManager.RunAllEffects();
 		}
 	}
@@ -70,13 +72,45 @@ public partial class Renderer
 		return _dirtyComponents.Count > 0;
 	}
 
+	private void Cleanup()
+	{
+		var keysForRemoval = new List<Component>();
+		foreach (var disposedNode in disposedNodes)
+		{
+			foreach (var item in _componentNodes.Where(x => x.Value.Contains(disposedNode)))
+			{
+				var prevLen = item.Value.Length;
+				var changed = item.Value.Where(x => x != disposedNode).ToArray();
+				var newLen = changed.Length;
+
+				if (prevLen == 0 || newLen == 0) keysForRemoval.Add(item.Key);
+				else if (prevLen != changed.Length) _componentNodes[item.Key] = changed;
+			}
+
+			disposedNode.Dispose();
+		}
+
+		foreach (var component in keysForRemoval)
+		{
+			component.ReleaseState();
+			_componentNodes.Remove(component);
+		}
+
+		disposedNodes.Clear();
+	}
+
+	private void RequestCleanup(INode node)
+	{
+		disposedNodes.Add(node);
+	}
+
 	private void Render(Component component, bool triggerEffects = true)
 	{
 		Managers = new ThreadLocal<Managers>(() => new Managers(EffectManager, StateManager, this));
 		var renderedComponent = component.RenderWithReset();
-		if (_componentNodes.TryGetValue(component, out var nodes) && nodes.Length != 0)
+		if (_componentNodes.TryGetValue(component, out var nodes) && nodes.First() is INode parentNode)
 		{
-			nodes = UpdateNode(new Queue<INode>(nodes), renderedComponent, nodes[0].GetParentNode()!);
+			nodes = UpdateNode(new Queue<INode>(nodes), renderedComponent, parentNode);
 			_componentNodes[component] = nodes;
 		}
 		else
@@ -104,7 +138,7 @@ public partial class Renderer
 			{
 				var node = nodes.Dequeue();
 				node.Remove();
-				node.Dispose();
+				RequestCleanup(node);
 			}
 			return;
 		}
@@ -184,7 +218,7 @@ public partial class Renderer
 					throw new InvalidOperationException("Expected a single node");
 				parent.AddChild(newNode[0]);
 				parent.RemoveChild(node);
-				node.Dispose();
+				RequestCleanup(node);
 				return newNode;
 			}
 
@@ -201,7 +235,7 @@ public partial class Renderer
 			{
 				var childNode = node.GetChild(i) ?? throw new InvalidOperationException("Child node is null");
 				node.RemoveChild(childNode);
-				childNode.Dispose();
+				RequestCleanup(childNode);
 			}
 
 			// Update existing or add new nodes

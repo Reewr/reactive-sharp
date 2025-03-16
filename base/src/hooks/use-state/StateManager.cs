@@ -30,4 +30,9 @@ public class StateManager
 
 		return castedComponentState;
 	}
+
+	internal void ReleaseStateFor(string componentId)
+	{
+		StateStore.Remove(componentId);
+	}
 }

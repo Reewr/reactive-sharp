@@ -10,16 +10,40 @@ public abstract class Component : IEnumerable
 	private readonly long _id = random.NextInt64(100000);
 
 	private int _stateIndex = 0;
-	private string _componentId;
+	private string _componentId = "";
+	private WeakReference<Component>? _parent;
 
-	public string? Key { set => _componentId = value ?? _componentId; }
+	public string Key { get => _componentId; set => _componentId = value ?? _componentId; }
 	public List<Component?> Children { get; set; } = [];
 
-	internal WeakReference<Component>? Parent { get; set; }
-
-	protected Component([CallerMemberName] string memberName = "", [CallerLineNumber] int lineNumber = 0)
+	internal WeakReference<Component>? Parent
 	{
-		_componentId = $"{GetFullTypeName()}:{memberName}:{lineNumber}";
+		get => _parent;
+		set
+		{
+			_parent = value;
+			SetComponentId();
+		}
+	}
+
+	private Component? GetParent()
+	{
+		if (Parent is not null && Parent.TryGetTarget(out var p))
+			return p;
+		return null;
+	}
+
+	private void SetComponentId()
+	{
+		var parent = GetParent();
+		var childIndex = parent?.Children.FindIndex(x => x == this);
+		var parentId = parent?.Key ?? "root";
+		_componentId = $"{parentId}-{GetFullTypeName()}";
+		if (childIndex != -1) _componentId += $"-{childIndex}";
+	}
+
+	protected Component()
+	{
 		Parent = Renderer.GetCurrentRenderer()?.CurrentRenderingComponent is Component parent
 			? new WeakReference<Component>(parent)
 			: null;
@@ -39,12 +63,17 @@ public abstract class Component : IEnumerable
 		return Render();
 	}
 
-	private string GetFullTypeName() => GetType().FullName ?? "UnknownType";
+	private string GetFullTypeName() => GetType().FullName ?? throw new InvalidTypeException($"{GetType().Name} has no type");
 
 	public State<T> UseState<T>(T initialValue)
 	{
 		int currentIndex = _stateIndex++;
 		return Renderer.GetCurrentStateManager()!.GetState(this, _componentId, currentIndex, initialValue);
+	}
+
+	internal void ReleaseState()
+	{
+		Renderer.GetCurrentStateManager()!.ReleaseStateFor(_componentId);
 	}
 
 	public void UseEffect(Func<Action> callback, params object[] dependencies)
@@ -83,4 +112,36 @@ public abstract class Component : IEnumerable
 	}
 
 	public IEnumerator GetEnumerator() => Children.GetEnumerator();
+}
+
+[Serializable]
+internal class InvalidTypeException : Exception
+{
+	public InvalidTypeException()
+	{
+	}
+
+	public InvalidTypeException(string? message) : base(message)
+	{
+	}
+
+	public InvalidTypeException(string? message, Exception? innerException) : base(message, innerException)
+	{
+	}
+}
+
+[Serializable]
+internal class InvalidComponentStateException : Exception
+{
+	public InvalidComponentStateException()
+	{
+	}
+
+	public InvalidComponentStateException(string? message) : base(message)
+	{
+	}
+
+	public InvalidComponentStateException(string? message, Exception? innerException) : base(message, innerException)
+	{
+	}
 }
