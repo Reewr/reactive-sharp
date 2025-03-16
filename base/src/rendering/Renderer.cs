@@ -216,8 +216,7 @@ public partial class Renderer
 				var newNode = BuildNode(newlyRenderedComponent);
 				if (newNode.Length != 1)
 					throw new InvalidOperationException("Expected a single node");
-				parent.AddChild(newNode[0]);
-				parent.RemoveChild(node);
+				parent.ReplaceChild(node, newNode[0]);
 				RequestCleanup(node);
 				return newNode;
 			}
