@@ -2,8 +2,9 @@ namespace ReactiveSharp.Dom.Tests;
 
 using ReactiveSharp;
 using ReactiveSharp.Dom;
+using Shouldly;
 
-internal class SimpleEffectTest : Component, ITestRun<SimpleEffectTest>
+public class SimpleEffectTest : TestComponent
 {
 	public override Component Render()
 	{
@@ -37,13 +38,20 @@ internal class SimpleEffectTest : Component, ITestRun<SimpleEffectTest>
 		};
 	}
 
-	public static string Expected => string.Join("", [
-		"<div>",
-		"<p>Count: 1</p>",
-		"<p>Not dependent: 3</p>",
-		"<p>Item: Effect</p>",
-		"<p>Item: Cleanup</p>",
-		"<p>Item: Effect</p>",
-		"</div>",
-	]);
+	[Fact(DisplayName = "Effect should trigger as expected")]
+	public void Test1()
+	{
+		RenderToString(this).ShouldBeEquivalentTo(
+			string.Join("", [
+				"<div>",
+				"<p>Count: 1</p>",
+				"<p>Not dependent: 3</p>",
+				"<p>Item: Effect</p>",
+				"<p>Item: Cleanup</p>",
+				"<p>Item: Effect</p>",
+				"</div>",
+			])
+		);
+	}
+
 }

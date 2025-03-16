@@ -1,6 +1,7 @@
 namespace ReactiveSharp.Dom.Tests;
 
 using ReactiveSharp;
+using Shouldly;
 
 class FragmentOnly : Component
 {
@@ -10,12 +11,16 @@ class FragmentOnly : Component
 	}
 }
 
-internal class OnlyFragmentComponentTest : Component, ITestRun<OnlyFragmentComponentTest>
+public class OnlyFragmentComponentTest : TestComponent
 {
 	public override Component Render()
 	{
 		return new Fragment() { new FragmentOnly() };
 	}
 
-	public static string Expected => "";
+	[Fact(DisplayName = "Fragments are not rendered")]
+	public void Test1()
+	{
+		RenderToString(this).ShouldBeEquivalentTo("");
+	}
 }

@@ -3,10 +3,11 @@ namespace ReactiveSharp.Dom.Tests;
 using System;
 using ReactiveSharp;
 using ReactiveSharp.Dom;
+using Shouldly;
 
-internal class SimpleStateComponentTest : Component, ITestRunWithActionAfter<SimpleStateComponentTest>
+public class SimpleStateComponentTest : TestComponent
 {
-	public Action? IncrementCounter { get; set; }
+	private Action? IncrementCounter { get; set; }
 
 	public override Component Render()
 	{
@@ -18,10 +19,12 @@ internal class SimpleStateComponentTest : Component, ITestRunWithActionAfter<Sim
 		};
 	}
 
-	public static string Expected => "<div><p>Counter: 1</p></div>";
-
-	public static Action<SimpleStateComponentTest>? ActionAfter => (SimpleStateComponentTest test) =>
+	[Fact(DisplayName = "Shows correct state after incrementing")]
+	public void Test1()
 	{
-		test.IncrementCounter!.Invoke();
-	};
+		Renderer.Render(this);
+		IncrementCounter!.Invoke();
+		IncrementCounter!.Invoke();
+		RerenderToString().ShouldBeEquivalentTo("<div><p>Counter: 2</p></div>");
+	}
 }

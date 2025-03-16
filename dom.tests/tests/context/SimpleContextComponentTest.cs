@@ -3,6 +3,7 @@ namespace ReactiveSharp.Dom.Tests;
 using System;
 using ReactiveSharp;
 using ReactiveSharp.Dom;
+using Shouldly;
 
 class MyTheme
 {
@@ -20,7 +21,7 @@ internal class MyComponentUsingContext : Component
 	}
 }
 
-internal class SimpleContextComponentTest : Component, ITestRunWithActionAfter<SimpleContextComponentTest>
+public class SimpleContextComponentTest : TestComponent
 {
 	public Action? ChangeColor { get; set; }
 
@@ -34,10 +35,11 @@ internal class SimpleContextComponentTest : Component, ITestRunWithActionAfter<S
 		};
 	}
 
-	public static string Expected => "<div><p>Hello, the world is blue</p></div>";
-
-	public static Action<SimpleContextComponentTest>? ActionAfter => (SimpleContextComponentTest test) =>
+	[Fact(DisplayName = "Context should apply correctly")]
+	public void Test1()
 	{
-		test.ChangeColor!.Invoke();
-	};
+		RenderToString(this).ShouldBeEquivalentTo("<div><p>Hello, the world is red</p></div>");
+		ChangeColor!.Invoke();
+		RenderToString(this).ShouldBeEquivalentTo("<div><p>Hello, the world is blue</p></div>");
+	}
 }

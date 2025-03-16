@@ -2,8 +2,9 @@ namespace ReactiveSharp.Dom.Tests;
 
 using ReactiveSharp;
 using ReactiveSharp.Dom;
+using Shouldly;
 
-internal class SimpleComponentTest : Component, ITestRun<SimpleComponentTest>
+public class SimpleComponentTest : TestComponent
 {
 	public override Component Render() => new Div
 	{
@@ -11,5 +12,9 @@ internal class SimpleComponentTest : Component, ITestRun<SimpleComponentTest>
 		new Button { Title = "Click me!" }
 	};
 
-	public static string Expected => "<div><p>Hello, world!</p><button>Click me!</button></div>";
+	[Fact(DisplayName = "Should render a simple component")]
+	public void Test1()
+	{
+		RenderToString(this).ShouldBeEquivalentTo("<div><p>Hello, world!</p><button>Click me!</button></div>");
+	}
 }

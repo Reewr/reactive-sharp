@@ -1,8 +1,8 @@
 namespace ReactiveSharp.Dom.Tests;
 
-using System;
 using ReactiveSharp;
 using ReactiveSharp.Dom;
+using Shouldly;
 
 internal class FragmentedP : Component
 {
@@ -12,14 +12,15 @@ internal class FragmentedP : Component
 	};
 }
 
-internal class FragmentComponentTest : Component, ITestRunWithActionAfter<FragmentComponentTest>
+public class FragmentComponentTest : TestComponent
 {
 	State<string>? Text;
 
-	public void ChangeText()
+	private void ChangeText()
 	{
 		Text!.Value = "Hello, other world!";
 	}
+
 	public override Component Render()
 	{
 		Text = UseState("Hello, world!");
@@ -34,7 +35,12 @@ internal class FragmentComponentTest : Component, ITestRunWithActionAfter<Fragme
 		};
 	}
 
-	public static string Expected => "<div><p>Hello, other world!<p>Hello, other world!</p></p><button>Click me!</button></div>";
 
-	public static Action<FragmentComponentTest>? ActionAfter { get { return component => component.ChangeText(); } }
+	[Fact(DisplayName = "Fragments are handled as invisible containers")]
+	public void Test1()
+	{
+		RenderToString(this).ShouldBeEquivalentTo("<div><p>Hello, world!<p>Hello, other world!</p></p><button>Click me!</button></div>");
+		ChangeText();
+		RerenderToString().ShouldBeEquivalentTo("<div><p>Hello, other world!<p>Hello, other world!</p></p><button>Click me!</button></div>");
+	}
 }

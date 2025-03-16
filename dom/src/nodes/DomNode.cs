@@ -22,6 +22,19 @@ abstract public class DomNode : ReactiveSharp.INode
 
 	public INode? GetChild(int index) => nodes.Count > index && index >= 0 ? nodes[index] : null;
 
+	private IEnumerable<DomNode> GetAllNodes()
+	{
+		foreach (var node in nodes)
+		{
+			yield return node;
+			foreach (var item in node.GetAllNodes())
+				yield return item;
+		}
+	}
+
+	public IEnumerable<T> SelectAll<T>() where T : DomNode => GetAllNodes().OfType<T>();
+	public T? Select<T>() where T : DomNode => SelectAll<T>().FirstOrDefault();
+
 	public int GetChildCount() => nodes.Count;
 
 	public INode? GetParentNode() => ParentNode;
