@@ -3,7 +3,6 @@ namespace ReactiveSharp;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 
 public abstract class Component : IEnumerable
 {
@@ -21,7 +20,7 @@ public abstract class Component : IEnumerable
 	protected Component([CallerMemberName] string memberName = "", [CallerLineNumber] int lineNumber = 0)
 	{
 		_componentId = $"{GetFullTypeName()}:{memberName}:{lineNumber}";
-		Parent = Renderer.CurrentRenderer?.CurrentRenderingComponent is Component parent
+		Parent = Renderer.GetCurrentRenderer()?.CurrentRenderingComponent is Component parent
 			? new WeakReference<Component>(parent)
 			: null;
 	}
@@ -36,8 +35,7 @@ public abstract class Component : IEnumerable
 	internal Component RenderWithReset()
 	{
 		_stateIndex = 0;
-		if (Renderer.CurrentRenderer != null)
-			Renderer.CurrentRenderer.CurrentRenderingComponent = this;
+		Renderer.GetCurrentRenderer()!.CurrentRenderingComponent = this;
 		return Render();
 	}
 
@@ -46,19 +44,19 @@ public abstract class Component : IEnumerable
 	public State<T> UseState<T>(T initialValue)
 	{
 		int currentIndex = _stateIndex++;
-		return StateManager.GetState(this, _componentId, currentIndex, initialValue);
+		return Renderer.GetCurrentStateManager()!.GetState(this, _componentId, currentIndex, initialValue);
 	}
 
 	public void UseEffect(Func<Action> callback, params object[] dependencies)
 	{
 		int currentIndex = _stateIndex++;
-		EffectManager.StoreEffect(_componentId, currentIndex, callback, dependencies);
+		Renderer.GetCurrentEffectManager()!.StoreEffect(_componentId, currentIndex, callback, dependencies);
 	}
 
 	public void UseEffect(Action callback, params object[] dependencies)
 	{
 		int currentIndex = _stateIndex++;
-		EffectManager.StoreEffect(_componentId, currentIndex, callback, dependencies);
+		Renderer.GetCurrentEffectManager()!.StoreEffect(_componentId, currentIndex, callback, dependencies);
 	}
 
 	public T UseContext<C, T>() where C : ContextProvider<T>

@@ -1,12 +1,14 @@
 namespace ReactiveSharp;
 
+using System;
 using System.Collections.Generic;
 
-public static class StateManager
+public class StateManager
 {
-	private static readonly Dictionary<string, List<StateBase?>> StateStore = [];
+	public required Renderer Renderer { private get; init; }
+	private readonly Dictionary<string, Dictionary<int, StateBase?>> StateStore = [];
 
-	public static State<T> GetState<T>(Component component, string componentId, int stateIndex, T initialValue)
+	public State<T> GetState<T>(Component component, string componentId, int stateIndex, T initialValue)
 	{
 		if (!StateStore.TryGetValue(componentId, out var componentStates))
 		{
@@ -14,19 +16,18 @@ public static class StateManager
 			StateStore[componentId] = componentStates;
 		}
 
-		// Expand the list if necessary
-		while (componentStates.Count <= stateIndex)
-			componentStates.Add(null);
+		if (
+			!StateStore[componentId].TryGetValue(stateIndex, out var componentState) ||
+			componentState is not State<T> castedComponentState
+			)
+		{
+			castedComponentState = new State<T>(
+				initialValue,
+				() => Renderer.RequestRender(component)
+			);
+			StateStore[componentId][stateIndex] = castedComponentState;
+		}
 
-		if (componentStates[stateIndex] is State<T> existingState)
-			return existingState;
-
-		var newState = new State<T>(
-			initialValue,
-			() => Renderer.CurrentRenderer?.RequestRender(component)
-		);
-
-		componentStates[stateIndex] = newState;
-		return newState;
+		return castedComponentState;
 	}
 }

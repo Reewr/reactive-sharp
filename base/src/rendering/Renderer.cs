@@ -3,6 +3,18 @@ namespace ReactiveSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+
+internal class Managers(
+	EffectManager effectManager,
+	StateManager stateManager,
+	Renderer renderer
+)
+{
+	internal readonly EffectManager EffectManager = effectManager;
+	internal readonly StateManager StateManager = stateManager;
+	internal readonly Renderer Renderer = renderer;
+}
 
 /***
  *
@@ -18,13 +30,22 @@ public partial class Renderer
 	private readonly INode _rootNode;
 	private readonly Dictionary<Component, INode[]> _componentNodes = [];
 	private readonly HashSet<Component> _dirtyComponents = [];
-	internal static Renderer? CurrentRenderer;
+	private readonly EffectManager EffectManager = new();
+	private readonly StateManager StateManager;
+
 	internal Component? CurrentRenderingComponent { get; set; }
+
+	internal static Renderer? GetCurrentRenderer() => Managers?.Value?.Renderer;
+	internal static StateManager? GetCurrentStateManager() => Managers?.Value?.StateManager;
+	internal static EffectManager? GetCurrentEffectManager() => Managers?.Value?.EffectManager;
+
+	[ThreadStatic]
+	private static ThreadLocal<Managers>? Managers;
 
 	public Renderer(INode rootNode)
 	{
 		_rootNode = rootNode;
-		CurrentRenderer = this;
+		StateManager = new StateManager { Renderer = this };
 	}
 
 	public void RequestRender(Component dirtyComponent) =>
@@ -51,6 +72,7 @@ public partial class Renderer
 
 	private void Render(Component component, bool triggerEffects = true)
 	{
+		Managers = new ThreadLocal<Managers>(() => new Managers(EffectManager, StateManager, this));
 		var renderedComponent = component.RenderWithReset();
 		if (_componentNodes.TryGetValue(component, out var nodes) && nodes.Length != 0)
 		{

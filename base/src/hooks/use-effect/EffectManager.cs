@@ -52,9 +52,9 @@ public class Effect
 
 class EffectManager
 {
-	private static readonly ConditionalWeakTable<string, List<Effect?>> EffectStore = [];
+	private readonly ConditionalWeakTable<string, List<Effect?>> EffectStore = [];
 
-	public static void RunAllEffects()
+	public void RunAllEffects()
 	{
 		foreach (var componentCallbacks in EffectStore)
 		{
@@ -65,7 +65,7 @@ class EffectManager
 		}
 	}
 
-	public static void StoreEffect(string componentId, int stateIndex, Action callback, params object[] dependencies)
+	public void StoreEffect(string componentId, int stateIndex, Action callback, params object[] dependencies)
 	{
 		StoreEffect(componentId, stateIndex, () =>
 		{
@@ -74,17 +74,7 @@ class EffectManager
 		}, dependencies);
 	}
 
-	private static object?[] ExtractDependenciesFromState(params object?[] dependencies)
-	{
-		return dependencies.Select(dependency =>
-		{
-			if (dependency is StateBase state)
-				return state.GetValueAsObject();
-			return dependency;
-		}).ToArray();
-	}
-
-	public static void StoreEffect(string componentId, int stateIndex, Func<Action> callback, params object?[] dependencies)
+	public void StoreEffect(string componentId, int stateIndex, Func<Action> callback, params object?[] dependencies)
 	{
 		var extractedDependencies = ExtractDependenciesFromState(dependencies);
 		if (!EffectStore.TryGetValue(componentId, out var componentCallbacks))
@@ -111,4 +101,15 @@ class EffectManager
 			RunOnNextRun = true
 		};
 	}
+
+	private static object?[] ExtractDependenciesFromState(params object?[] dependencies)
+	{
+		return dependencies.Select(dependency =>
+		{
+			if (dependency is StateBase state)
+				return state.GetValueAsObject();
+			return dependency;
+		}).ToArray();
+	}
+
 }
