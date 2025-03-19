@@ -26,6 +26,13 @@ public interface IGNode : ReactiveSharp.INode
 	{
 		if (oldChild is not IGNode old) throw new Exception("Old child must be a GodotNode");
 		if (newChild is not IGNode newC) throw new Exception("New child must be a GodotNode");
+
+		foreach (var child in old.Node.GetChildren())
+		{
+			old.Node.RemoveChild(child);
+			child.Free();
+		}
+
 		old.Node.ReplaceBy(newC.Node);
 	}
 
