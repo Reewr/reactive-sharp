@@ -6,24 +6,28 @@ class NodeStateManager
 
 	private static readonly Dictionary<object, Dictionary<string, object>> propertyStates = [];
 	private static readonly Dictionary<object, Dictionary<string, List<Delegate>>> eventHandlers = [];
+	private static readonly Dictionary<object, Dictionary<string, int>> themeConstantOverrides = [];
 
 	private NodeStateManager() { }
 
-	public static void AddPropertyState(object instance, string name, object value)
+	private static void SetProp<T, V>(T dict, object instance, string name, V value) where T : Dictionary<object, Dictionary<string, V>>
 	{
 		if (instance == null) return;
-		if (propertyStates.TryGetValue(instance, out Dictionary<string, object>? state))
+		if (dict.TryGetValue(instance, out var inner))
 		{
-			if (!state.ContainsKey(name))
+			if (!inner.ContainsKey(name))
 			{
-				state[name] = value;
+				inner[name] = value;
 			}
 		}
 		else
 		{
-			propertyStates[instance] = new Dictionary<string, object> { [name] = value };
+			dict[instance] = new Dictionary<string, V> { [name] = value };
 		}
 	}
+
+	public static void AddPropertyState(object instance, string name, object value) => SetProp(propertyStates, instance, name, value);
+	public static void AddThemeConstantOverride(object instance, string name, int value) => SetProp(themeConstantOverrides, instance, name, value);
 
 	public static void AddEventHandler(object instance, string name, Delegate handler)
 	{
@@ -66,6 +70,21 @@ class NodeStateManager
 			}
 		}
 
+		if (themeConstantOverrides.TryGetValue(instance, out var instanceThemeConstantOverrides))
+		{
+			var control = (Godot.Control)instance;
+			if (instanceThemeConstantOverrides.Count > 0)
+			{
+				control.BeginBulkThemeOverride();
+				foreach (var (name, _) in instanceThemeConstantOverrides)
+				{
+					control.RemoveThemeConstantOverride(name);
+				}
+				control.EndBulkThemeOverride();
+			}
+		}
+
+		themeConstantOverrides.Remove(instance);
 		propertyStates.Remove(instance);
 		eventHandlers.Remove(instance);
 	}

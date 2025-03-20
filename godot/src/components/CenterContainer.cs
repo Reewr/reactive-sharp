@@ -99,6 +99,7 @@ namespace ReactiveSharpGodot.Components
         public Godot.Node.EditorDescriptionChangedEventHandler? EditorDescriptionChanged { protected get; init; }
         public System.Action? ScriptChanged { protected get; init; }
         public System.Action? PropertyListChanged { protected get; init; }
+        public Dictionary<string, int> ThemeConstantOverrides { protected get; init; } = [];
 
         public override ReactiveSharpGodot.Nodes.GCenterContainer Build(List<ReactiveSharp.INode> builtChildren)
         {
@@ -694,6 +695,14 @@ namespace ReactiveSharpGodot.Components
                 NodeStateManager.AddEventHandler(castedNode, "PropertyListChanged", e26);
                 castedNode.PropertyListChanged += e26;
             }
+
+            castedNode.BeginBulkThemeOverride();
+            foreach (var(key, value)in ThemeConstantOverrides)
+            {
+                castedNode.AddThemeConstantOverride(key, value);
+            }
+
+            castedNode.EndBulkThemeOverride();
         }
     }
 }
