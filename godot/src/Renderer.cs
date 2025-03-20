@@ -11,29 +11,20 @@ public partial class Renderer : Godot.Control
 	{
 		instanceCount++;
 		ComponentRenderer = new ReactiveSharp.Renderer(RendererNode);
-		Position = new Godot.Vector2(0, 0);
 		MouseFilter = Godot.Control.MouseFilterEnum.Ignore;
-		RendererNode.Name = $"RenderRoot{instanceCount}";
-		RendererNode.Position = new Godot.Vector2(0, 0);
+		SetAnchorsPreset(LayoutPreset.FullRect);
+		RendererNode.Name = $"RenderRoot-{instanceCount}";
 		RendererNode.MouseFilter = Godot.Control.MouseFilterEnum.Ignore;
-	}
-
-	public override void _Ready()
-	{
-		GetViewport().SizeChanged += OnViewportSizeChanged;
-		OnViewportSizeChanged();
+		RendererNode.SetAnchorsPreset(LayoutPreset.FullRect);
 	}
 
 	private void OnViewportSizeChanged()
 	{
-		RendererNode.Size = GetViewportRect().Size;
-		Size = GetViewportRect().Size;
 	}
 
 	public override void _EnterTree()
 	{
 		AddChild(RendererNode);
-		OnViewportSizeChanged();
 	}
 
 	public override void _Process(double delta)
