@@ -43,6 +43,9 @@ internal class ComponentGenerator : CodeGenerator
 			"foreach (var (key, value) in ThemeConstantOverrides) {\n" +
 			"    castedNode.AddThemeConstantOverride(key, value);\n" +
 			"}" +
+			"foreach (var (key, value) in ThemeColorOverrides) {\n" +
+			"    castedNode.AddThemeColorOverride(key, value);\n" +
+			"}" +
 			"castedNode.EndBulkThemeOverride();\n" +
 		"}";
 	}
@@ -87,6 +90,7 @@ internal class ComponentGenerator : CodeGenerator
 			CreatePropertyDefinitions(uniqueProperties),
 			string.Join("\n", CreateEventProperties(type)),
 			$"public Dictionary<string, int> ThemeConstantOverrides {{ protected get; init; }} = [];",
+			$"public Dictionary<string, Godot.Color> ThemeColorOverrides {{ protected get; init; }} = [];",
 			"",
 			$"public override {godotNodeName} Build(List<ReactiveSharp.INode> builtChildren) ",
 			"{ " +

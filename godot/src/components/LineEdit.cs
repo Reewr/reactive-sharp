@@ -130,6 +130,7 @@ namespace ReactiveSharpGodot.Components
         public System.Action? ScriptChanged { protected get; init; }
         public System.Action? PropertyListChanged { protected get; init; }
         public Dictionary<string, int> ThemeConstantOverrides { protected get; init; } = [];
+        public Dictionary<string, Godot.Color> ThemeColorOverrides { protected get; init; } = [];
 
         public override ReactiveSharpGodot.Nodes.GLineEdit Build(List<ReactiveSharp.INode> builtChildren)
         {
@@ -910,6 +911,11 @@ namespace ReactiveSharpGodot.Components
             foreach (var(key, value)in ThemeConstantOverrides)
             {
                 castedNode.AddThemeConstantOverride(key, value);
+            }
+
+            foreach (var(key, value)in ThemeColorOverrides)
+            {
+                castedNode.AddThemeColorOverride(key, value);
             }
 
             castedNode.EndBulkThemeOverride();

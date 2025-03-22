@@ -7,6 +7,7 @@ class NodeStateManager
 	private static readonly Dictionary<object, Dictionary<string, object>> propertyStates = [];
 	private static readonly Dictionary<object, Dictionary<string, List<Delegate>>> eventHandlers = [];
 	private static readonly Dictionary<object, Dictionary<string, int>> themeConstantOverrides = [];
+	private static readonly Dictionary<object, Dictionary<string, Godot.Color>> themeColorOverrides = [];
 
 	private NodeStateManager() { }
 
@@ -28,6 +29,7 @@ class NodeStateManager
 
 	public static void AddPropertyState(object instance, string name, object value) => SetProp(propertyStates, instance, name, value);
 	public static void AddThemeConstantOverride(object instance, string name, int value) => SetProp(themeConstantOverrides, instance, name, value);
+	public static void AddThemeColorOverride(object instance, string name, Godot.Color value) => SetProp(themeColorOverrides, instance, name, value);
 
 	public static void AddEventHandler(object instance, string name, Delegate handler)
 	{
@@ -70,18 +72,31 @@ class NodeStateManager
 			}
 		}
 
-		if (themeConstantOverrides.TryGetValue(instance, out var instanceThemeConstantOverrides))
+		if (instance is Godot.Control c)
 		{
-			var control = (Godot.Control)instance;
-			if (instanceThemeConstantOverrides.Count > 0)
+			c.BeginBulkThemeOverride();
+			if (themeConstantOverrides.TryGetValue(instance, out var instanceThemeConstantOverrides))
 			{
-				control.BeginBulkThemeOverride();
-				foreach (var (name, _) in instanceThemeConstantOverrides)
+				if (instanceThemeConstantOverrides.Count > 0)
 				{
-					control.RemoveThemeConstantOverride(name);
+					foreach (var (name, _) in instanceThemeConstantOverrides)
+					{
+						c.RemoveThemeConstantOverride(name);
+					}
 				}
-				control.EndBulkThemeOverride();
 			}
+
+			if (themeColorOverrides.TryGetValue(instance, out var instanceThemeColorOverrides))
+			{
+				if (instanceThemeColorOverrides.Count > 0)
+				{
+					foreach (var (name, _) in instanceThemeColorOverrides)
+					{
+						c.RemoveThemeColorOverride(name);
+					}
+				}
+			}
+			c.EndBulkThemeOverride();
 		}
 
 		themeConstantOverrides.Remove(instance);
