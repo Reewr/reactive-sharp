@@ -108,7 +108,7 @@ public partial class Renderer
 	{
 		Managers = new ThreadLocal<Managers>(() => new Managers(EffectManager, StateManager, this));
 		var renderedComponent = component.RenderWithReset();
-		if (_componentNodes.TryGetValue(component, out var nodes) && nodes.First() is INode parentNode)
+		if (_componentNodes.TryGetValue(component, out var nodes) && nodes.FirstOrDefault() is INode parentNode)
 		{
 			nodes = UpdateNode(new Queue<INode>(nodes), renderedComponent, parentNode);
 			_componentNodes[component] = nodes;
