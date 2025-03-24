@@ -1,3 +1,4 @@
+// This file is auto-generated. Please do not edit
 namespace ReactiveSharpGodot.Components
 {
     public class HSlider : ReactiveSharp.NodeComponent<ReactiveSharpGodot.Nodes.GHSlider>

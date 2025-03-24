@@ -1,3 +1,4 @@
+// This file is auto-generated. Please do not edit
 namespace ReactiveSharpGodot.Components
 {
     public class TextureRect : ReactiveSharp.NodeComponent<ReactiveSharpGodot.Nodes.GTextureRect>

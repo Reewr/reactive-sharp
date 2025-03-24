@@ -1,3 +1,4 @@
+// This file is auto-generated. Please do not edit
 namespace ReactiveSharpGodot.Components
 {
     public class BoxContainer : ReactiveSharp.NodeComponent<ReactiveSharpGodot.Nodes.GBoxContainer>

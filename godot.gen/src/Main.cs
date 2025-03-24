@@ -3,6 +3,7 @@ using ReactiveSharpGodot.Gen;
 
 public class GodotNodeGeneration
 {
+	private static readonly string AUTO_GENERATED_COMMENT = "// This file is auto-generated. Please do not edit";
 	private static bool IsIgnored(Type type) =>
 		type == typeof(Godot.Slider) ||
 		type == typeof(Godot.ScrollBar) ||
@@ -36,7 +37,7 @@ public class GodotNodeGeneration
 		Directory.CreateDirectory(nodesDir);
 		Directory.CreateDirectory(componentsDir);
 
-		foreach (var (name, code) in nodes) File.WriteAllText($"{nodesDir}/{name}.cs", code);
-		foreach (var (name, code) in components) File.WriteAllText($"{componentsDir}/{name}.cs", code);
+		foreach (var (name, code) in nodes) File.WriteAllText($"{nodesDir}/{name}.cs", $"{AUTO_GENERATED_COMMENT}\n{code}");
+		foreach (var (name, code) in components) File.WriteAllText($"{componentsDir}/{name}.cs", $"{AUTO_GENERATED_COMMENT}\n{code}");
 	}
 }

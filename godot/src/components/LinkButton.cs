@@ -1,3 +1,4 @@
+// This file is auto-generated. Please do not edit
 namespace ReactiveSharpGodot.Components
 {
     public class LinkButton : ReactiveSharp.NodeComponent<ReactiveSharpGodot.Nodes.GLinkButton>

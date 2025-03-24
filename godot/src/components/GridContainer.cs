@@ -1,3 +1,4 @@
+// This file is auto-generated. Please do not edit
 namespace ReactiveSharpGodot.Components
 {
     public class GridContainer : ReactiveSharp.NodeComponent<ReactiveSharpGodot.Nodes.GGridContainer>
