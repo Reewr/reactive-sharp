@@ -49,14 +49,6 @@ class NodeStateManager
 
 	public static void Reset(object instance)
 	{
-		if (propertyStates.TryGetValue(instance, out Dictionary<string, object>? value))
-		{
-			foreach (var (name, val) in value)
-			{
-				instance.GetType().GetProperty(name)?.SetValue(instance, val);
-			}
-		}
-
 		if (eventHandlers.TryGetValue(instance, out Dictionary<string, List<Delegate>>? actions))
 		{
 			foreach (var (name, handlers) in actions)
@@ -69,6 +61,14 @@ class NodeStateManager
 						eventInfo.RemoveEventHandler(instance, handler);
 					}
 				}
+			}
+		}
+
+		if (propertyStates.TryGetValue(instance, out Dictionary<string, object>? value))
+		{
+			foreach (var (name, val) in value)
+			{
+				instance.GetType().GetProperty(name)?.SetValue(instance, val);
 			}
 		}
 
