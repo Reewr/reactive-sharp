@@ -110,8 +110,16 @@ public partial class Renderer
 		var renderedComponent = component.RenderWithReset();
 		if (_componentNodes.TryGetValue(component, out var nodes) && nodes.FirstOrDefault() is INode parentNode)
 		{
-			nodes = UpdateNode(new Queue<INode>(nodes), renderedComponent, parentNode);
-			_componentNodes[component] = nodes;
+			var newNodes = UpdateNode(new Queue<INode>(nodes), renderedComponent, parentNode);
+			if (newNodes.Length == 0)
+			{
+				foreach (var node in nodes)
+				{
+					node.Remove();
+					RequestCleanup(node);
+				}
+			}
+			_componentNodes[component] = newNodes;
 		}
 		else
 		{
