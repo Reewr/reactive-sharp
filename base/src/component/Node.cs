@@ -1,4 +1,5 @@
-using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ReactiveSharp;
 
@@ -32,6 +33,15 @@ public interface INode
 	/// </summary>
 	/// <returns></returns>
 	int GetChildCount();
+
+	List<INode> GetChildren()
+	{
+		return Enumerable
+			.Range(0, GetChildCount())
+			.Select(GetChild)
+			.OfType<INode>()
+			.ToList();
+	}
 
 	/// <summary>
 	/// Returns the child at the given index, if it exists.
