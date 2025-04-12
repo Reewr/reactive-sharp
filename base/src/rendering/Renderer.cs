@@ -16,6 +16,14 @@ internal class Managers(
 	internal readonly Renderer Renderer = renderer;
 }
 
+internal class BuiltNode
+{
+	public required Component Component { get; set; }
+	public INode? Node { get; set; }
+	public BuiltNode? Parent { get; set; }
+	public BuiltNode[] Children { get; set; } = [];
+}
+
 /***
  *
  * The Renderer class is responsible for turning a Component into a tree of INode objects.
@@ -28,9 +36,8 @@ internal class Managers(
 public partial class Renderer
 {
 	private readonly INode _rootNode;
-	private readonly Dictionary<Component, INode[]> _componentNodes = [];
+	private readonly Dictionary<string, BuiltNode> _builtNodes = [];
 	private readonly HashSet<Component> _dirtyComponents = [];
-	private readonly HashSet<INode> disposedNodes = [];
 	private readonly EffectManager EffectManager = new();
 	private readonly StateManager StateManager;
 
@@ -62,7 +69,6 @@ public partial class Renderer
 			}
 
 			_dirtyComponents.Clear();
-			Cleanup();
 			EffectManager.RunAllEffects();
 		}
 	}
@@ -72,227 +78,138 @@ public partial class Renderer
 		return _dirtyComponents.Count > 0;
 	}
 
-	private void Cleanup()
-	{
-		var keysForRemoval = new List<Component>();
-		foreach (var disposedNode in disposedNodes)
-		{
-			foreach (var item in _componentNodes.Where(x => x.Value.Contains(disposedNode)))
-			{
-				var prevLen = item.Value.Length;
-				var changed = item.Value.Where(x => x != disposedNode).ToArray();
-				var newLen = changed.Length;
-
-				if (prevLen == 0 || newLen == 0) keysForRemoval.Add(item.Key);
-				else if (prevLen != changed.Length) _componentNodes[item.Key] = changed;
-			}
-
-			disposedNode.Dispose();
-		}
-
-		foreach (var component in keysForRemoval)
-		{
-			component.ReleaseState();
-			_componentNodes.Remove(component);
-		}
-
-		disposedNodes.Clear();
-	}
-
-	private void RequestCleanup(INode node)
-	{
-		disposedNodes.Add(node);
-	}
-
-	private void Render(Component component, bool triggerEffects = true)
-	{
-		Managers = new ThreadLocal<Managers>(() => new Managers(EffectManager, StateManager, this));
-		var renderedComponent = component.RenderWithReset();
-		if (_componentNodes.TryGetValue(component, out var nodes) && nodes.FirstOrDefault() is INode parentNode)
-		{
-			var newNodes = UpdateNode(new Queue<INode>(nodes), renderedComponent, parentNode);
-			if (newNodes.Length == 0)
-			{
-				foreach (var node in nodes)
-				{
-					node.Remove();
-					RequestCleanup(node);
-				}
-			}
-			_componentNodes[component] = newNodes;
-		}
-		else
-		{
-			nodes = BuildNode(renderedComponent);
-			foreach (var builtNode in nodes)
-				_rootNode.AddChild(builtNode);
-			_componentNodes[component] = nodes;
-		}
-
-		if (triggerEffects)
-			EffectManager.RunAllEffects();
-	}
-
 	public void Render(Component component)
 	{
 		Render(component, true);
 	}
 
-	private void DiffAndUpdate(Queue<INode> nodes, Component? oldComponent, Component? newComponent, INode parent)
+	private void Render(Component component, bool triggerEffects = true)
 	{
-		if (newComponent == null)
-		{
-			if (oldComponent != null)
-			{
-				var node = nodes.Dequeue();
-				node.Remove();
-				RequestCleanup(node);
-			}
-			return;
-		}
+		Managers = new ThreadLocal<Managers>(() => new Managers(EffectManager, StateManager, this));
+		if (_builtNodes.TryGetValue(component.Key, out var builtNode))
+			builtNode = UpdateNode(builtNode);
+		else
+			builtNode = BuildNode(component);
 
-		// Update node properties
-		UpdateNode(nodes, newComponent, parent);
+		var firstNodes = FindFirstINodeDownwards(builtNode);
+		var attachNode = FindFirstINodeUpwards(builtNode) ?? _rootNode;
+		foreach (var node in firstNodes)
+			attachNode.AddChild(node);
+
+		if (triggerEffects)
+			EffectManager.RunAllEffects();
 	}
 
-	private INode[] BuildNode(Component component)
+	private BuiltNode UpdateNode(BuiltNode node)
 	{
-		if (component is INodeComponent nodeComponent)
+		var inodes = FindINodes(node).ToList();
+		var newBuiltNode = BuildNode(node.Component, inodes);
+		var newKeys = FindComponentKeys(newBuiltNode).ToList();
+		var oldKeys = FindComponentKeys(node).ToList();
+		foreach (var oldKey in oldKeys)
 		{
-			var children = nodeComponent.Children
-				.OfType<Component>()
-				.SelectMany(child =>
-				{
-					var innerNode = BuildNode(child);
-					_componentNodes[child] = innerNode;
-					return innerNode;
-				})
-				.ToList();
-
-			var node = nodeComponent.Build(children);
-			_componentNodes[component] = [node];
-			return [node];
+			if (!newKeys.Contains(oldKey))
+			{
+				_builtNodes.GetValueOrDefault(oldKey)?.Component.ReleaseState();
+				_builtNodes.Remove(oldKey);
+			}
 		}
-		else if (component is Fragment fragment)
+
+		foreach (var inode in inodes)
 		{
-			var children = fragment.Children
+			inode.Remove();
+			inode.Dispose();
+		}
+
+		newBuiltNode.Parent = node.Parent;
+		return newBuiltNode;
+	}
+
+	private BuiltNode BuildNode(Component component) => BuildNode(component, []);
+	private BuiltNode BuildNode(Component component, List<INode> existingINodes)
+	{
+		var builtNode = new BuiltNode() { Component = component };
+		if (component is INodeComponent || component is Fragment)
+		{
+			var children = component.Children
 				.OfType<Component>()
-				.SelectMany(child =>
+				.Select(child =>
 				{
-					var innerNode = BuildNode(child);
-					_componentNodes[child] = innerNode;
+					var innerNode = BuildNode(child, existingINodes);
+					innerNode.Parent = builtNode;
 					return innerNode;
 				})
 				.ToArray();
 
-			_componentNodes[component] = children;
-			return children;
+			builtNode.Children = children;
+			builtNode.Node = component is INodeComponent node
+				? BuildINodeComponent(node, children, existingINodes)
+				: null;
 		}
 		else
 		{
-
 			var renderedComponent = component.RenderWithReset();
-			var nodes = BuildNode(renderedComponent);
-			_componentNodes[component] = nodes;
-			return nodes;
+			var node = BuildNode(renderedComponent, existingINodes);
+			builtNode.Children = [node];
+			node.Parent = builtNode;
 		}
+
+		_builtNodes[component.Key] = builtNode;
+		return builtNode;
+
 	}
 
-	private IEnumerable<Component> FlattenFragment(Component component)
+	private static INode BuildINodeComponent(INodeComponent node, BuiltNode[] children, List<INode> inodes)
 	{
-		if (component is not Fragment fragment)
-			return [component];
+		var found = inodes.Where(x => x.GetType() == node.NodeType).FirstOrDefault();
+		if (found is not null)
+		{
+			found.Reset();
+			foreach (var existingChild in found.GetChildren()) existingChild.Remove();
 
-		return fragment
-			.Children
-			.OfType<Component>()
-			.SelectMany(child =>
+			found.Remove();
+			inodes.Remove(found);
+			foreach (var child in children)
 			{
-				if (child is Fragment innerFragment)
-					return FlattenFragment(innerFragment);
-				return [child];
-			});
+				foreach (var innerInode in FindFirstINodeDownwards(child))
+					found.AddChild(innerInode);
+			}
+
+			node.UpdateProperties(found);
+			return found;
+		}
+
+		return node.Build([.. children.SelectMany(FindFirstINodeDownwards).OfType<INode>()]);
 	}
 
-	private INode[] UpdateNode(Queue<INode> nodes, Component newlyRenderedComponent, INode parent)
+	private static INode[] FindFirstINodeDownwards(BuiltNode? builtNode)
 	{
-		if (newlyRenderedComponent is INodeComponent nodeComponent)
-		{
-			var node = nodes.Dequeue();
-			if (node.GetType() != nodeComponent.NodeType)
-			{
-				var newNode = BuildNode(newlyRenderedComponent);
-				if (newNode.Length != 1)
-					throw new InvalidOperationException("Expected a single node");
-				parent.ReplaceChild(node, newNode[0]);
-				RequestCleanup(node);
-				return newNode;
-			}
-
-			var nodeComponentChildren = nodeComponent
-				.Children
-				.OfType<Component>()
-				.SelectMany(FlattenFragment)
-				.ToList();
-			int childCount = nodeComponentChildren.Count;
-			int nodeChildCount = node.GetChildCount();
-
-			// Remove extra nodes
-			for (int i = nodeChildCount - 1; i >= childCount; i--)
-			{
-				var childNode = node.GetChild(i) ?? throw new InvalidOperationException("Child node is null");
-				node.RemoveChild(childNode);
-				RequestCleanup(childNode);
-			}
-
-			// Update existing or add new nodes
-			for (int i = 0; i < childCount; i++)
-			{
-				var childComponent = nodeComponentChildren[i];
-
-				if (i < nodeChildCount)
-				{
-					var queue = new Queue<INode>();
-					queue.Enqueue(node.GetChild(i) ?? throw new InvalidOperationException("Child node is null"));
-					queue = new Queue<INode>(queue.Concat(nodes));
-					DiffAndUpdate(
-						queue,
-						null,
-						childComponent,
-						node
-					);
-				}
-				else
-				{
-					if (_componentNodes.TryGetValue(childComponent, out var existingNodes))
-						DiffAndUpdate(new Queue<INode>(existingNodes), null, childComponent, node);
-					else
-					{
-						var newChildNode = BuildNode(childComponent);
-						foreach (var newChild in newChildNode)
-							node.AddChild(newChild);
-					}
-				}
-			}
-
-			node.Reset();
-			nodeComponent.UpdateProperties(node);
-			return [node];
-		}
-		else if (newlyRenderedComponent is Fragment fragment)
-		{
-			return fragment
-				.Children
-				.OfType<Component>()
-				.Select(child => UpdateNode(nodes, child, parent))
-				.SelectMany(x => x)
-				.ToArray();
-		}
-		else
-		{
-			// Handle custom components
-			var renderedComponent = newlyRenderedComponent.RenderWithReset();
-			return UpdateNode(nodes, renderedComponent, parent);
-		}
+		if (builtNode is null) return [];
+		if (builtNode.Node is not null) return [builtNode.Node];
+		return [.. builtNode.Children.SelectMany(FindFirstINodeDownwards)];
 	}
+
+	private static INode? FindFirstINodeUpwards(BuiltNode? builtNode)
+	{
+		if (builtNode is null) return null;
+		if (builtNode.Node is not null) return builtNode.Node;
+		return FindFirstINodeUpwards(builtNode.Parent);
+	}
+
+	private static IEnumerable<INode> FindINodes(BuiltNode node)
+	{
+		if (node.Node is not null)
+			yield return node.Node;
+
+		foreach (var n in node.Children.SelectMany(FindINodes))
+			yield return n;
+	}
+
+	private static IEnumerable<string> FindComponentKeys(BuiltNode node)
+	{
+		yield return node.Component.Key;
+		foreach (var s in node.Children.SelectMany(FindComponentKeys))
+			yield return s;
+	}
+
 }

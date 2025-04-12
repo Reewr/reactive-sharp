@@ -11,6 +11,9 @@ abstract public class DomNode : ReactiveSharp.INode
 	public void AddChild(INode child)
 	{
 		if (child is not DomNode ch) throw new Exception("Child must be a DomNode");
+		if (child == this) throw new Exception("Cannot attach to self");
+		if (nodes.Contains(ch)) return;
+		if (ParentNode == ch) throw new Exception("Cannot add recursive");
 		nodes.Add(ch);
 		ch.ParentNode = this;
 	}
@@ -54,6 +57,7 @@ abstract public class DomNode : ReactiveSharp.INode
 	{
 		if (child is not DomNode ch) throw new Exception("Child must be a DomNode");
 		nodes.Remove(ch);
+		ch.ParentNode = null;
 	}
 
 	public abstract string Name();
