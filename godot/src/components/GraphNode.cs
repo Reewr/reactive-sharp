@@ -38,6 +38,7 @@ namespace ReactiveSharpGodot.Components
         public System.Boolean? LocalizeNumeralSystem { protected get; init; }
         public System.Boolean? AutoTranslate { protected get; init; }
         public System.String? TooltipText { protected get; init; }
+        public Godot.Node.AutoTranslateModeEnum? TooltipAutoTranslateMode { protected get; init; }
         public Godot.NodePath? FocusNeighborLeft { protected get; init; }
         public Godot.NodePath? FocusNeighborTop { protected get; init; }
         public Godot.NodePath? FocusNeighborRight { protected get; init; }
@@ -114,6 +115,7 @@ namespace ReactiveSharpGodot.Components
         public System.Action? ChildOrderChanged { protected get; init; }
         public Godot.Node.ReplacingByEventHandler? ReplacingBy { protected get; init; }
         public Godot.Node.EditorDescriptionChangedEventHandler? EditorDescriptionChanged { protected get; init; }
+        public System.Action? EditorStateChanged { protected get; init; }
         public System.Action? ScriptChanged { protected get; init; }
         public System.Action? PropertyListChanged { protected get; init; }
         public Dictionary<string, int> ThemeConstantOverrides { protected get; init; } = [];
@@ -374,250 +376,256 @@ namespace ReactiveSharpGodot.Components
                 castedNode.TooltipText = n34;
             }
 
-            if (FocusNeighborLeft is Godot.NodePath n35)
+            if (TooltipAutoTranslateMode is Godot.Node.AutoTranslateModeEnum n35)
+            {
+                NodeStateManager.AddPropertyState(castedNode, "TooltipAutoTranslateMode", castedNode.TooltipAutoTranslateMode);
+                castedNode.TooltipAutoTranslateMode = n35;
+            }
+
+            if (FocusNeighborLeft is Godot.NodePath n36)
             {
                 NodeStateManager.AddPropertyState(castedNode, "FocusNeighborLeft", castedNode.FocusNeighborLeft);
-                castedNode.FocusNeighborLeft = n35;
+                castedNode.FocusNeighborLeft = n36;
             }
 
-            if (FocusNeighborTop is Godot.NodePath n36)
+            if (FocusNeighborTop is Godot.NodePath n37)
             {
                 NodeStateManager.AddPropertyState(castedNode, "FocusNeighborTop", castedNode.FocusNeighborTop);
-                castedNode.FocusNeighborTop = n36;
+                castedNode.FocusNeighborTop = n37;
             }
 
-            if (FocusNeighborRight is Godot.NodePath n37)
+            if (FocusNeighborRight is Godot.NodePath n38)
             {
                 NodeStateManager.AddPropertyState(castedNode, "FocusNeighborRight", castedNode.FocusNeighborRight);
-                castedNode.FocusNeighborRight = n37;
+                castedNode.FocusNeighborRight = n38;
             }
 
-            if (FocusNeighborBottom is Godot.NodePath n38)
+            if (FocusNeighborBottom is Godot.NodePath n39)
             {
                 NodeStateManager.AddPropertyState(castedNode, "FocusNeighborBottom", castedNode.FocusNeighborBottom);
-                castedNode.FocusNeighborBottom = n38;
+                castedNode.FocusNeighborBottom = n39;
             }
 
-            if (FocusNext is Godot.NodePath n39)
+            if (FocusNext is Godot.NodePath n40)
             {
                 NodeStateManager.AddPropertyState(castedNode, "FocusNext", castedNode.FocusNext);
-                castedNode.FocusNext = n39;
+                castedNode.FocusNext = n40;
             }
 
-            if (FocusPrevious is Godot.NodePath n40)
+            if (FocusPrevious is Godot.NodePath n41)
             {
                 NodeStateManager.AddPropertyState(castedNode, "FocusPrevious", castedNode.FocusPrevious);
-                castedNode.FocusPrevious = n40;
+                castedNode.FocusPrevious = n41;
             }
 
-            if (FocusMode is Godot.Control.FocusModeEnum n41)
+            if (FocusMode is Godot.Control.FocusModeEnum n42)
             {
                 NodeStateManager.AddPropertyState(castedNode, "FocusMode", castedNode.FocusMode);
-                castedNode.FocusMode = n41;
+                castedNode.FocusMode = n42;
             }
 
-            if (MouseFilter is Godot.Control.MouseFilterEnum n42)
+            if (MouseFilter is Godot.Control.MouseFilterEnum n43)
             {
                 NodeStateManager.AddPropertyState(castedNode, "MouseFilter", castedNode.MouseFilter);
-                castedNode.MouseFilter = n42;
+                castedNode.MouseFilter = n43;
             }
 
-            if (MouseForcePassScrollEvents is System.Boolean n43)
+            if (MouseForcePassScrollEvents is System.Boolean n44)
             {
                 NodeStateManager.AddPropertyState(castedNode, "MouseForcePassScrollEvents", castedNode.MouseForcePassScrollEvents);
-                castedNode.MouseForcePassScrollEvents = n43;
+                castedNode.MouseForcePassScrollEvents = n44;
             }
 
-            if (MouseDefaultCursorShape is Godot.Control.CursorShape n44)
+            if (MouseDefaultCursorShape is Godot.Control.CursorShape n45)
             {
                 NodeStateManager.AddPropertyState(castedNode, "MouseDefaultCursorShape", castedNode.MouseDefaultCursorShape);
-                castedNode.MouseDefaultCursorShape = n44;
+                castedNode.MouseDefaultCursorShape = n45;
             }
 
-            if (ShortcutContext is Godot.Node n45)
+            if (ShortcutContext is Godot.Node n46)
             {
                 NodeStateManager.AddPropertyState(castedNode, "ShortcutContext", castedNode.ShortcutContext);
-                castedNode.ShortcutContext = n45;
+                castedNode.ShortcutContext = n46;
             }
 
-            if (Theme is Godot.Theme n46)
+            if (Theme is Godot.Theme n47)
             {
                 NodeStateManager.AddPropertyState(castedNode, "Theme", castedNode.Theme);
-                castedNode.Theme = n46;
+                castedNode.Theme = n47;
             }
 
-            if (ThemeTypeVariation is Godot.StringName n47)
+            if (ThemeTypeVariation is Godot.StringName n48)
             {
                 NodeStateManager.AddPropertyState(castedNode, "ThemeTypeVariation", castedNode.ThemeTypeVariation);
-                castedNode.ThemeTypeVariation = n47;
+                castedNode.ThemeTypeVariation = n48;
             }
 
-            if (Visible is System.Boolean n48)
+            if (Visible is System.Boolean n49)
             {
                 NodeStateManager.AddPropertyState(castedNode, "Visible", castedNode.Visible);
-                castedNode.Visible = n48;
+                castedNode.Visible = n49;
             }
 
-            if (Modulate is Godot.Color n49)
+            if (Modulate is Godot.Color n50)
             {
                 NodeStateManager.AddPropertyState(castedNode, "Modulate", castedNode.Modulate);
-                castedNode.Modulate = n49;
+                castedNode.Modulate = n50;
             }
 
-            if (SelfModulate is Godot.Color n50)
+            if (SelfModulate is Godot.Color n51)
             {
                 NodeStateManager.AddPropertyState(castedNode, "SelfModulate", castedNode.SelfModulate);
-                castedNode.SelfModulate = n50;
+                castedNode.SelfModulate = n51;
             }
 
-            if (ShowBehindParent is System.Boolean n51)
+            if (ShowBehindParent is System.Boolean n52)
             {
                 NodeStateManager.AddPropertyState(castedNode, "ShowBehindParent", castedNode.ShowBehindParent);
-                castedNode.ShowBehindParent = n51;
+                castedNode.ShowBehindParent = n52;
             }
 
-            if (TopLevel is System.Boolean n52)
+            if (TopLevel is System.Boolean n53)
             {
                 NodeStateManager.AddPropertyState(castedNode, "TopLevel", castedNode.TopLevel);
-                castedNode.TopLevel = n52;
+                castedNode.TopLevel = n53;
             }
 
-            if (ClipChildren is Godot.CanvasItem.ClipChildrenMode n53)
+            if (ClipChildren is Godot.CanvasItem.ClipChildrenMode n54)
             {
                 NodeStateManager.AddPropertyState(castedNode, "ClipChildren", castedNode.ClipChildren);
-                castedNode.ClipChildren = n53;
+                castedNode.ClipChildren = n54;
             }
 
-            if (LightMask is System.Int32 n54)
+            if (LightMask is System.Int32 n55)
             {
                 NodeStateManager.AddPropertyState(castedNode, "LightMask", castedNode.LightMask);
-                castedNode.LightMask = n54;
+                castedNode.LightMask = n55;
             }
 
-            if (VisibilityLayer is System.UInt32 n55)
+            if (VisibilityLayer is System.UInt32 n56)
             {
                 NodeStateManager.AddPropertyState(castedNode, "VisibilityLayer", castedNode.VisibilityLayer);
-                castedNode.VisibilityLayer = n55;
+                castedNode.VisibilityLayer = n56;
             }
 
-            if (ZIndex is System.Int32 n56)
+            if (ZIndex is System.Int32 n57)
             {
                 NodeStateManager.AddPropertyState(castedNode, "ZIndex", castedNode.ZIndex);
-                castedNode.ZIndex = n56;
+                castedNode.ZIndex = n57;
             }
 
-            if (ZAsRelative is System.Boolean n57)
+            if (ZAsRelative is System.Boolean n58)
             {
                 NodeStateManager.AddPropertyState(castedNode, "ZAsRelative", castedNode.ZAsRelative);
-                castedNode.ZAsRelative = n57;
+                castedNode.ZAsRelative = n58;
             }
 
-            if (YSortEnabled is System.Boolean n58)
+            if (YSortEnabled is System.Boolean n59)
             {
                 NodeStateManager.AddPropertyState(castedNode, "YSortEnabled", castedNode.YSortEnabled);
-                castedNode.YSortEnabled = n58;
+                castedNode.YSortEnabled = n59;
             }
 
-            if (TextureFilter is Godot.CanvasItem.TextureFilterEnum n59)
+            if (TextureFilter is Godot.CanvasItem.TextureFilterEnum n60)
             {
                 NodeStateManager.AddPropertyState(castedNode, "TextureFilter", castedNode.TextureFilter);
-                castedNode.TextureFilter = n59;
+                castedNode.TextureFilter = n60;
             }
 
-            if (TextureRepeat is Godot.CanvasItem.TextureRepeatEnum n60)
+            if (TextureRepeat is Godot.CanvasItem.TextureRepeatEnum n61)
             {
                 NodeStateManager.AddPropertyState(castedNode, "TextureRepeat", castedNode.TextureRepeat);
-                castedNode.TextureRepeat = n60;
+                castedNode.TextureRepeat = n61;
             }
 
-            if (Material is Godot.Material n61)
+            if (Material is Godot.Material n62)
             {
                 NodeStateManager.AddPropertyState(castedNode, "Material", castedNode.Material);
-                castedNode.Material = n61;
+                castedNode.Material = n62;
             }
 
-            if (UseParentMaterial is System.Boolean n62)
+            if (UseParentMaterial is System.Boolean n63)
             {
                 NodeStateManager.AddPropertyState(castedNode, "UseParentMaterial", castedNode.UseParentMaterial);
-                castedNode.UseParentMaterial = n62;
+                castedNode.UseParentMaterial = n63;
             }
 
-            if (Name is Godot.StringName n63)
+            if (Name is Godot.StringName n64)
             {
                 NodeStateManager.AddPropertyState(castedNode, "Name", castedNode.Name);
-                castedNode.Name = n63;
+                castedNode.Name = n64;
             }
 
-            if (UniqueNameInOwner is System.Boolean n64)
+            if (UniqueNameInOwner is System.Boolean n65)
             {
                 NodeStateManager.AddPropertyState(castedNode, "UniqueNameInOwner", castedNode.UniqueNameInOwner);
-                castedNode.UniqueNameInOwner = n64;
+                castedNode.UniqueNameInOwner = n65;
             }
 
-            if (SceneFilePath is System.String n65)
+            if (SceneFilePath is System.String n66)
             {
                 NodeStateManager.AddPropertyState(castedNode, "SceneFilePath", castedNode.SceneFilePath);
-                castedNode.SceneFilePath = n65;
+                castedNode.SceneFilePath = n66;
             }
 
-            if (Owner is Godot.Node n66)
+            if (Owner is Godot.Node n67)
             {
                 NodeStateManager.AddPropertyState(castedNode, "Owner", castedNode.Owner);
-                castedNode.Owner = n66;
+                castedNode.Owner = n67;
             }
 
-            if (ProcessMode is Godot.Node.ProcessModeEnum n67)
+            if (ProcessMode is Godot.Node.ProcessModeEnum n68)
             {
                 NodeStateManager.AddPropertyState(castedNode, "ProcessMode", castedNode.ProcessMode);
-                castedNode.ProcessMode = n67;
+                castedNode.ProcessMode = n68;
             }
 
-            if (ProcessPriority is System.Int32 n68)
+            if (ProcessPriority is System.Int32 n69)
             {
                 NodeStateManager.AddPropertyState(castedNode, "ProcessPriority", castedNode.ProcessPriority);
-                castedNode.ProcessPriority = n68;
+                castedNode.ProcessPriority = n69;
             }
 
-            if (ProcessPhysicsPriority is System.Int32 n69)
+            if (ProcessPhysicsPriority is System.Int32 n70)
             {
                 NodeStateManager.AddPropertyState(castedNode, "ProcessPhysicsPriority", castedNode.ProcessPhysicsPriority);
-                castedNode.ProcessPhysicsPriority = n69;
+                castedNode.ProcessPhysicsPriority = n70;
             }
 
-            if (ProcessThreadGroup is Godot.Node.ProcessThreadGroupEnum n70)
+            if (ProcessThreadGroup is Godot.Node.ProcessThreadGroupEnum n71)
             {
                 NodeStateManager.AddPropertyState(castedNode, "ProcessThreadGroup", castedNode.ProcessThreadGroup);
-                castedNode.ProcessThreadGroup = n70;
+                castedNode.ProcessThreadGroup = n71;
             }
 
-            if (ProcessThreadGroupOrder is System.Int32 n71)
+            if (ProcessThreadGroupOrder is System.Int32 n72)
             {
                 NodeStateManager.AddPropertyState(castedNode, "ProcessThreadGroupOrder", castedNode.ProcessThreadGroupOrder);
-                castedNode.ProcessThreadGroupOrder = n71;
+                castedNode.ProcessThreadGroupOrder = n72;
             }
 
-            if (ProcessThreadMessages is Godot.Node.ProcessThreadMessagesEnum n72)
+            if (ProcessThreadMessages is Godot.Node.ProcessThreadMessagesEnum n73)
             {
                 NodeStateManager.AddPropertyState(castedNode, "ProcessThreadMessages", castedNode.ProcessThreadMessages);
-                castedNode.ProcessThreadMessages = n72;
+                castedNode.ProcessThreadMessages = n73;
             }
 
-            if (PhysicsInterpolationMode is Godot.Node.PhysicsInterpolationModeEnum n73)
+            if (PhysicsInterpolationMode is Godot.Node.PhysicsInterpolationModeEnum n74)
             {
                 NodeStateManager.AddPropertyState(castedNode, "PhysicsInterpolationMode", castedNode.PhysicsInterpolationMode);
-                castedNode.PhysicsInterpolationMode = n73;
+                castedNode.PhysicsInterpolationMode = n74;
             }
 
-            if (AutoTranslateMode is Godot.Node.AutoTranslateModeEnum n74)
+            if (AutoTranslateMode is Godot.Node.AutoTranslateModeEnum n75)
             {
                 NodeStateManager.AddPropertyState(castedNode, "AutoTranslateMode", castedNode.AutoTranslateMode);
-                castedNode.AutoTranslateMode = n74;
+                castedNode.AutoTranslateMode = n75;
             }
 
-            if (EditorDescription is System.String n75)
+            if (EditorDescription is System.String n76)
             {
                 NodeStateManager.AddPropertyState(castedNode, "EditorDescription", castedNode.EditorDescription);
-                castedNode.EditorDescription = n75;
+                castedNode.EditorDescription = n76;
             }
 
             if (CloseRequest is System.Action e0)
@@ -830,16 +838,22 @@ namespace ReactiveSharpGodot.Components
                 castedNode.EditorDescriptionChanged += e34;
             }
 
-            if (ScriptChanged is System.Action e35)
+            if (EditorStateChanged is System.Action e35)
             {
-                NodeStateManager.AddEventHandler(castedNode, "ScriptChanged", e35);
-                castedNode.ScriptChanged += e35;
+                NodeStateManager.AddEventHandler(castedNode, "EditorStateChanged", e35);
+                castedNode.EditorStateChanged += e35;
             }
 
-            if (PropertyListChanged is System.Action e36)
+            if (ScriptChanged is System.Action e36)
             {
-                NodeStateManager.AddEventHandler(castedNode, "PropertyListChanged", e36);
-                castedNode.PropertyListChanged += e36;
+                NodeStateManager.AddEventHandler(castedNode, "ScriptChanged", e36);
+                castedNode.ScriptChanged += e36;
+            }
+
+            if (PropertyListChanged is System.Action e37)
+            {
+                NodeStateManager.AddEventHandler(castedNode, "PropertyListChanged", e37);
+                castedNode.PropertyListChanged += e37;
             }
 
             castedNode.BeginBulkThemeOverride();
