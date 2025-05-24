@@ -61,6 +61,12 @@ through other means:
 -   `Button`
 -   `VerticalSeparator`
 
+The example below show cases the use of state as well as context that
+can be used to share state across layers of components. All of these
+functionalities have been taken as direct inspiration from React. If you
+have ever worked in functional React, this should feel very famililar to
+you, though with a C# vibe.
+
 ```csharp
 class Theme {
 	public Color BackgroundColor { get; set; }
@@ -69,11 +75,18 @@ class Theme {
 
 class ThemeProvider(MyTheme theme) : ReactiveSharp.ContextProvider<Theme>(theme) { }
 
-class MyComponent : ReactiveSharp.Component
+// We can define our own hook by creating extensions
+static class UseThemeHook {
+	public static Theme UseTheme(this Component component) {
+		return component.UseContext<ThemeProvider, Theme>();
+	}
+}
+
+class Counter : ReactiveSharp.Component
 {
 	public override ReactiveSharp.Component Render() {
 		ReactiveSharp.State<int> count = UseState(0);
-		Theme theme = UseContext<ThemeProvider, Theme>();
+		Theme theme = this.UseTheme();
 
 		return new VBoxContainer()
 		{
@@ -97,10 +110,10 @@ class MyApp : ReactiveSharp.Component
 
 		return new ThemeProvider(theme)
 		{
-			new ReactiveSharp.Fragment() {
-				new MyComponent(),
+			new Fragment() {
+				new Counter(),
 				new VerticalSeparator(),
-				new MyComponent()
+				new Counter()
 			}
 		};
 	}
