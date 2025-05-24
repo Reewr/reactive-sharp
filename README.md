@@ -17,11 +17,11 @@ an extension library that fills in the gaps.
 
 Within this repository, you will find two extensino libraries:
 
--   `ReactiveUI.Dom` - Sets up some basic node components that can be used to
+-   `ReactiveSharp.Dom` - Sets up some basic node components that can be used to
     create a reactive user interface.that turns into HTML. It is mostly used for
     testing and debugging purposes.
 
--   `ReactiveUI.Godot` - Sets up the required components to create a
+-   `ReactiveSharp.Godot` - Sets up the required components to create a
     reactive user interface in Godot.
 
 ## Extension Libraries
