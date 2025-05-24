@@ -1,9 +1,10 @@
 using ReactiveSharp;
 using ReactiveSharpGodot.Components;
+using Fragment = ReactiveSharpGodot.Components.Fragment;
 
 namespace ReactiveSharpGodotTest;
 
-public class MyComponent : Component
+public class Counter : Component
 {
 	public override Component Render()
 	{

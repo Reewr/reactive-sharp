@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://baqn2bp3q2s1j"]
 
-[ext_resource type="Script" path="res://tests/Test.cs" id="1_pnyry"]
+[ext_resource type="Script" uid="uid://iuj0f2d1f42h" path="res://tests/counter/CounterTestRenderer.cs" id="1_r7qly"]
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -9,4 +9,4 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_pnyry")
+script = ExtResource("1_r7qly")
