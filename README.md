@@ -1,4 +1,4 @@
-# Reactive UI
+# ReactiveSharp
 
 This library provides a set of classes that can be used to create
 reactive user interfaces. The library is based on and attempts to follow
