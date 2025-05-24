@@ -93,10 +93,11 @@ public abstract class Component : IEnumerable
 		return ContextManager.GetContext<C, T>(this).GetContextValue();
 	}
 
-	public void Add(Component component)
+	public void Add(Component? component)
 	{
 		Children.Add(component);
-		component.Parent = new WeakReference<Component>(this);
+		if (component is not null)
+			component.Parent = new WeakReference<Component>(this);
 	}
 
 	public void Add(params Component[] components)
