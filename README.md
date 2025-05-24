@@ -51,6 +51,45 @@ If you require state in your component, you can use the `State` class
 through the `UseState` which is reactive and will cause your component
 to re-render when the it changes.
 
+## Hooks
+
+The following hooks are available as of now:
+
+### `UseState<T>(initialValue) => State<T>`
+
+Creates a state that is reactive. Modifying the internal value by either
+setting it manually through `SetValue` or by directly assigning to
+`Value` will cause the framework to queue your component for
+re-rendering. Once `Renderer.RenderRequested` is called again, the
+render tree with be updated.
+
+### `UseContext<Provider, T>() -> T`
+
+This requires you to have a Provider further up in the tree. The
+Provider component is a special component that simply serves as a way to
+store some state.
+
+Should the Provider value be updated, all those components that depend
+on the Provider through the use of `UseContext` will also be updated.
+
+### `UseEffect(Func, [dependencies])`
+
+The function given to this hook will be run when the component is
+initially rendered. The given function can also return another function
+that should be exectuted before calling the initial function again. If
+given dependencies, if any of the dependencies change, the intial
+function will be rerun (when it renders again)
+
+## Setup - Godot
+
+As of now, this is quite usable in Godot. Setting this up is quite
+simple. You can see how it is done in `godot.test`
+
+1. Update the `project.csproj` with the library paths to `base` and `godot`
+2. Add a new class `<YourName>Renderer` that extends `ReactiveSharpGodot.Renderer`
+3. Within a scene, attach this class to an existing UI node.
+4. Within the `<YourName>Renderer`, override the `_ready` function and call `Render(new MyComponent())`
+
 ### Example
 
 This example assumes that the following components have been made available
