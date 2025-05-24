@@ -119,3 +119,15 @@ class MyApp : ReactiveSharp.Component
 	}
 }
 ```
+
+### Godot Example
+
+To see how this works in Godot, please see [godot.test/tests](./godot.test/tests) for more examples.
+
+#### [godot.test/tests/counter](./godot.test/tests/counter)
+
+This show cases a simple counter example. You can start this in Godot by loading the project and running it.
+
+#### [godot.test/tests/ticktactoe](./godot.test/tests/tictactoe)
+
+This is a more complex example of UI being controlled by ReactiveSharp, as it needs multiple different components,
