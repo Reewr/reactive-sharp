@@ -8,5 +8,8 @@
   <ItemGroup>
     <ProjectReference Include="..\base\reactive-sharp.csproj" />
     <ProjectReference Include="..\godot\reactive-sharp-godot.csproj" />
+    <PackageReference Include="Chickensoft.GoDotTest" Version="1.5.10" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
+    <PackageReference Include="Shouldly" Version="4.2.1" />
   </ItemGroup>
 </Project>
