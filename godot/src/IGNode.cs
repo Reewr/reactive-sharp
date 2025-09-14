@@ -17,7 +17,7 @@ public interface IGNode : ReactiveSharp.INode
 	ReactiveSharp.INode? ReactiveSharp.INode.GetParentNode()
 	{
 		var parent = Node.GetParent<IGNode>();
-		return Godot.GodotObject.IsInstanceValid(parent.Node) ? parent : null;
+		return parent is not null && Godot.GodotObject.IsInstanceValid(parent.Node) ? parent : null;
 	}
 
 	void ReactiveSharp.INode.Remove() => Node.GetParent<Godot.Node>()?.RemoveChild(Node);
