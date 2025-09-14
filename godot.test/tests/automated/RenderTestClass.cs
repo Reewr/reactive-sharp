@@ -14,12 +14,12 @@ public partial class TestRenderer : ReactiveSharpGodot.Renderer
 }
 public abstract partial class RenderTestClass(Godot.Node testScene) : TestClass(testScene)
 {
-	protected TestRenderer renderer = new(testScene);
+	protected TestRenderer? renderer;
 
 	[Setup]
 	public void Setup()
 	{
-		renderer.Free();
+		renderer?.Free();
 		foreach (var node in TestScene.GetChildren())
 			node.Free();
 		renderer = new TestRenderer(TestScene);
@@ -27,7 +27,7 @@ public abstract partial class RenderTestClass(Godot.Node testScene) : TestClass(
 
 	protected string ToTreeString(bool replaceDigits = true, bool removeStartingDot = true, bool removeTrailingSpace = true)
 	{
-		var tree = renderer.GetTreeString();
+		var tree = renderer!.GetTreeString();
 		if (replaceDigits) tree = DigitRegex().Replace(tree, "{d}");
 		if (removeStartingDot) tree = tree.Replace('.', ' ').TrimStart();
 		if (removeTrailingSpace) tree = tree.TrimEnd();
@@ -35,11 +35,11 @@ public abstract partial class RenderTestClass(Godot.Node testScene) : TestClass(
 		return tree;
 	}
 
-	protected void Render(ReactiveSharp.Component c) => renderer.Render(c);
-	protected void Rerender() => renderer._Process(1);
+	protected void Render(ReactiveSharp.Component c) => renderer!.Render(c);
+	protected void Rerender() => renderer!._Process(1);
 
 	protected T? GetFirstOf<T>() where T : Godot.Node => GetAllOf<T>().First();
-	protected IEnumerable<T> GetAllOf<T>() where T : Godot.Node => GetAllOf<T>(renderer);
+	protected IEnumerable<T> GetAllOf<T>() where T : Godot.Node => GetAllOf<T>(renderer!);
 
 	private IEnumerable<T> GetAllOf<T>(Godot.Node node) where T : Godot.Node
 	{
