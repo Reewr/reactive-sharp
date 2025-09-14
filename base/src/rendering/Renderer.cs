@@ -93,6 +93,12 @@ public partial class Renderer
 
 		var firstNodes = FindFirstINodeDownwards(builtNode);
 		var attachNode = FindFirstINodeUpwards(builtNode) ?? _rootNode;
+
+		// it may be that the attachNode is the same as one of the nodes
+		// in the first nodes. In that case, we need to use root node as
+		// we can't attach a node to itself
+		if (firstNodes.Contains(attachNode)) attachNode = _rootNode;
+
 		foreach (var node in firstNodes)
 			attachNode.AddChild(node);
 
