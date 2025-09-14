@@ -1,6 +1,5 @@
 using ReactiveSharp;
 using ReactiveSharpGodot.Components;
-using Fragment = ReactiveSharpGodot.Components.Fragment;
 
 namespace ReactiveSharpGodotTest;
 
