@@ -25,12 +25,40 @@ public abstract partial class RenderTestClass(Godot.Node testScene) : TestClass(
 		renderer = new TestRenderer(TestScene);
 	}
 
-	protected string ToTreeString(bool replaceDigits = true, bool removeStartingDot = true, bool removeTrailingSpace = true)
+	/// <summary>
+	/// Uses `Godot.Node.GetTreeString()` to create a tree of the
+	/// currently rendered items.
+	/// All items will have name similar to `Button@<number>` where the number indicates
+	/// the count of rendered items. Keep in mind that this number may start higher
+	/// than expected as it is a count by Godot of how many Godot elements have been
+	/// created
+	/// </summary>
+	/// <param name="removeDigits">Default true, removes the digit</param>
+	/// <returns></returns>
+	protected string ToTreeString(bool removeDigits = true)
 	{
+		// the initial format of GetTreeString is something like:
+		// @RenderRoot-1
+		// @RenderRoot-1/@Button@2
+		// @RenderRoot-1/@Label@3
+		// @RenderRoot-1/@Box@4
+		// @RenderRoot-1/@Box@4/@Label@5
+		//
+		// We want to simplify this to (removeDigits = true)
+		//
+		// Button
+		// Label
+		// Box
+		//     Label
+
+
 		var tree = renderer!.GetTreeString();
-		if (replaceDigits) tree = DigitRegex().Replace(tree, "{d}");
-		if (removeStartingDot) tree = tree.Replace('.', ' ').TrimStart();
-		if (removeTrailingSpace) tree = tree.TrimEnd();
+		tree = RenderRootRegex().Replace(tree, "");
+		tree = tree.Replace('.', ' ').TrimStart();
+		tree = AtRegex().Replace(tree, "$2");
+		tree = tree.Replace("@", "-");
+		if (removeDigits) tree = DigitRegex().Replace(tree, "").Replace("-", "");
+		tree = tree.TrimEnd();
 
 		return tree;
 	}
@@ -50,6 +78,10 @@ public abstract partial class RenderTestClass(Godot.Node testScene) : TestClass(
 				yield return n;
 	}
 
-	[GeneratedRegex("\\d+")]
+	[GeneratedRegex("@\\d+")]
 	private static partial Regex DigitRegex();
+	[GeneratedRegex("RenderRoot-\\d+/*")]
+	private static partial Regex RenderRootRegex();
+	[GeneratedRegex("(@)([a-zA-Z]+)")]
+	private static partial Regex AtRegex();
 }

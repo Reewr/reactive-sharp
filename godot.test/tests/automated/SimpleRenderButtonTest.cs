@@ -28,8 +28,7 @@ public class SimpleRenderButtonTest(Godot.Node testScene) : RenderTestClass(test
 
 		ToTreeString().ShouldBeEquivalentTo(
 			"""
-			RenderRoot-{d}
-			RenderRoot-{d}/@Button@{d}
+			Button
 			"""
 		);
 	}
