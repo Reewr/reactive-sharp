@@ -1,28 +1,48 @@
 namespace ReactiveSharpGodotTest;
 
+using System.CodeDom;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 using Chickensoft.GoDotTest;
+using Godot;
 
 public partial class TestRenderer : ReactiveSharpGodot.Renderer
 {
-	private Godot.Node TestScene;
-	public TestRenderer(Godot.Node testScene)
+	private Node TestScene;
+	public TestRenderer(Node testScene)
 	{
 		TestScene = testScene;
 		TestScene.AddChild(this);
 	}
 }
-public abstract partial class RenderTestClass(Godot.Node testScene) : TestClass(testScene)
+public abstract partial class RenderTestClass(Node testScene) : TestClass(testScene)
 {
 	protected TestRenderer? renderer;
 
 	[Setup]
 	public void Setup()
 	{
+		// Setup the renderer so that we can start the tests, making sure that there's
+		// nothing already existing within the test scene.
 		renderer?.Free();
 		foreach (var node in TestScene.GetChildren())
 			node.Free();
 		renderer = new TestRenderer(TestScene);
+
+		// The running engine has a counter that is incremented for
+		// every single node creation.  This integer is used to make the
+		// names of the nodes unique. Sadly, it does not reset until you
+		// restart the engine.
+		//
+		// In order to have consistent names across test runs, we need to
+		// set the names of the created nodes ourselves with a number
+		// that we control
+		int i = 0;
+		TestScene.GetTree().NodeAdded += (node) =>
+		{
+			node.Name = DigitRegex().Replace(node.Name, (d) => i++.ToString());
+		};
 	}
 
 	/// <summary>
