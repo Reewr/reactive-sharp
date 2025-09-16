@@ -58,38 +58,46 @@ public abstract partial class RenderTestClass(Node testScene) : TestClass(testSc
 	protected string ToTreeString(bool removeDigits = true)
 	{
 		// the initial format of GetTreeString is something like:
-		// @RenderRoot-1
-		// @RenderRoot-1/@Button@2
-		// @RenderRoot-1/@Label@3
-		// @RenderRoot-1/@Box@4
-		// @RenderRoot-1/@Box@4/@Label@5
 		//
-		// We want to simplify this to (removeDigits = true)
+		// RenderRoot-1
+		// RenderRoot-1/@Button@2
+		// RenderRoot-1/@Label@3
+		// RenderRoot-1/@Box@4
+		// RenderRoot-1/@Box@4/@Label@5
+		//
+		// We want to simplify this to:
 		//
 		// Button
 		// Label
 		// Box
-		//     Label
+		//   Label
+		var treeItems = renderer!
+			.GetTreeString()
+			.Split("\n")
+			.Select(x => RenderRootRegex().Replace(x, ""))
+			.Select(x => AtRegex().Replace(x, "$!"))
+			.Select(x => PostFixDigitRegex().Replace(x, removeDigits ? "" : "-$2"))
+			.Select(x => x.Replace("-", removeDigits ? "" : "-"))
+			.Select(x => x.Replace("_", ""))
+			.Select(x => x.Trim())
+			.Where(x => x.Length > 0 && x != ".")
+			.ToList();
 
 
-		var tree = renderer!.GetTreeString();
-		tree = RenderRootRegex().Replace(tree, "");
-		tree = tree.Replace('.', ' ').TrimStart();
-		tree = AtRegex().Replace(tree, "$2");
-		tree = tree.Replace("@", "-");
-		if (removeDigits) tree = DigitRegex().Replace(tree, "").Replace("-", "");
-		tree = tree.TrimEnd();
+		for (int i = 0; i < treeItems.Count; i++)
+			for (int ii = i + 1; ii < treeItems.Count; ii++)
+				treeItems[ii] = treeItems[ii].Replace($"{treeItems[i]}/", "  ");
 
-		return tree;
+		return string.Join("\n", treeItems);
 	}
 
 	protected void Render(ReactiveSharp.Component c) => renderer!.Render(c);
 	protected void Rerender() => renderer!._Process(1);
 
-	protected T? GetFirstOf<T>() where T : Godot.Node => GetAllOf<T>().First();
-	protected IEnumerable<T> GetAllOf<T>() where T : Godot.Node => GetAllOf<T>(renderer!);
+	protected T? GetFirstOf<T>() where T : Node => GetAllOf<T>().First();
+	protected IEnumerable<T> GetAllOf<T>() where T : Node => GetAllOf<T>(renderer!);
 
-	private IEnumerable<T> GetAllOf<T>(Godot.Node node) where T : Godot.Node
+	private IEnumerable<T> GetAllOf<T>(Node node) where T : Node
 	{
 		if (node is T t) yield return t;
 
@@ -98,10 +106,15 @@ public abstract partial class RenderTestClass(Node testScene) : TestClass(testSc
 				yield return n;
 	}
 
-	[GeneratedRegex("@\\d+")]
-	private static partial Regex DigitRegex();
+	[GeneratedRegex("(-|_)(\\d+)")]
+	private static partial Regex PostFixDigitRegex();
+
 	[GeneratedRegex("RenderRoot-\\d+/*")]
 	private static partial Regex RenderRootRegex();
+
 	[GeneratedRegex("(@)([a-zA-Z]+)")]
 	private static partial Regex AtRegex();
+
+	[GeneratedRegex("\\d+")]
+	private static partial Regex DigitRegex();
 }
