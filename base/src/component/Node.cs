@@ -55,6 +55,14 @@ public interface INode
 	/// make sure that they keep the same order in the list of children.
 	/// </summary>
 	void ReplaceChild(INode oldChild, INode newChild);
+
+	/// <summary>
+	/// Inserts the given node at index
+	/// </summary>
+	/// <param name="index"></param>
+	/// <param name="node"></param>
+	void Insert(int index, INode node);
+
 	/// <summary>
 	/// Removes the given child from the list of children.
 	/// </summary>

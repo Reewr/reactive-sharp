@@ -46,4 +46,39 @@ public interface IGNode : ReactiveSharp.INode
 	{
 		NodeStateManager.Reset(this);
 	}
+
+	void ReactiveSharp.INode.Dispose()
+	{
+		Node.Free();
+	}
+
+	void ReactiveSharp.INode.Insert(int i, ReactiveSharp.INode node)
+	{
+		if (node is not IGNode n) throw new Exception("after must be a GodotNode");
+		if (i < 0) throw new IndexOutOfRangeException("negative not allowed");
+
+		var count = Node.GetChildCount();
+		if (i != 0 && i >= count) throw new IndexOutOfRangeException();
+
+		// cases were we can simply add at the end
+		if ((i == 0 && count == 0) || (i == count))
+		{
+			Node.AddChild(n.Node);
+			return;
+		}
+
+		// cases were we can add after a node
+		if (i != 0 && i < count)
+		{
+			var after = Node.GetChild(i - 1);
+			after.AddSibling(n.Node);
+			return;
+		}
+
+		// last case, really, where i == 0, but count is not.
+		// since AddSibiling always add after a node and there's no insert
+		// before, we need to move the child
+		Node.AddChild(n.Node);
+		Node.MoveChild(n.Node, i);
+	}
 }

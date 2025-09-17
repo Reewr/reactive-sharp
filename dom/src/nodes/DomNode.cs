@@ -80,4 +80,10 @@ abstract public class DomNode : ReactiveSharp.INode
 
 	public void Reset() { }
 
+	public void Insert(int i, INode node)
+	{
+		if (node is not DomNode d) throw new Exception("toBeInserted must be a DomNode");
+		nodes.Insert(i, d);
+		d.ParentNode = this;
+	}
 }

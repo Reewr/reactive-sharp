@@ -22,6 +22,7 @@ internal class BuiltNode
 	public INode? Node { get; set; }
 	public BuiltNode? Parent { get; set; }
 	public BuiltNode[] Children { get; set; } = [];
+	public int Position { get; set; } = 0;
 }
 
 /***
@@ -99,8 +100,12 @@ public partial class Renderer
 		// we can't attach a node to itself
 		if (firstNodes.Contains(attachNode)) attachNode = _rootNode;
 
+		var position = builtNode.Position;
 		foreach (var node in firstNodes)
-			attachNode.AddChild(node);
+		{
+			attachNode.Insert(position, node);
+			position += 1;
+		}
 
 		if (triggerEffects)
 			EffectManager.RunAllEffects();
@@ -128,6 +133,7 @@ public partial class Renderer
 		}
 
 		newBuiltNode.Parent = node.Parent;
+		newBuiltNode.Position = node.Position;
 		return newBuiltNode;
 	}
 
@@ -139,10 +145,11 @@ public partial class Renderer
 		{
 			var children = component.Children
 				.OfType<Component>()
-				.Select(child =>
+				.Select((child, i) =>
 				{
 					var innerNode = BuildNode(child, existingINodes);
 					innerNode.Parent = builtNode;
+					innerNode.Position = i;
 					return innerNode;
 				})
 				.ToArray();
@@ -158,6 +165,7 @@ public partial class Renderer
 			var node = BuildNode(renderedComponent, existingINodes);
 			builtNode.Children = [node];
 			node.Parent = builtNode;
+			node.Position = 0;
 		}
 
 		_builtNodes[component.Key] = builtNode;
