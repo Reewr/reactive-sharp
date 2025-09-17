@@ -20,12 +20,16 @@ public abstract partial class RenderTestClass(Node testScene) : TestClass(testSc
 {
 	protected TestRenderer? renderer;
 
+	protected List<WeakReference> weakRefs = [];
+
 	[Setup]
 	public void Setup()
 	{
 		// Setup the renderer so that we can start the tests, making sure that there's
 		// nothing already existing within the test scene.
 		renderer?.Free();
+		weakRefs.Clear();
+
 		foreach (var node in TestScene.GetChildren())
 			node.Free();
 		renderer = new TestRenderer(TestScene);
@@ -41,7 +45,12 @@ public abstract partial class RenderTestClass(Node testScene) : TestClass(testSc
 		int i = 0;
 		TestScene.GetTree().NodeAdded += (node) =>
 		{
-			node.Name = DigitRegex().Replace(node.Name, (d) => i++.ToString());
+			var hasItem = weakRefs.Any(x => x.Target == node);
+			if (!hasItem)
+			{
+				node.Name = DigitRegex().Replace(node.Name, (d) => i++.ToString());
+				weakRefs.Add(new WeakReference(node));
+			}
 		};
 	}
 
