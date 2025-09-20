@@ -52,6 +52,8 @@ public interface IGNode : ReactiveSharp.INode
 		Node.Free();
 	}
 
+	bool ReactiveSharp.INode.IsDisposed() => !Godot.GodotObject.IsInstanceValid(Node);
+
 	void ReactiveSharp.INode.Insert(int i, ReactiveSharp.INode node)
 	{
 		if (node is not IGNode n) throw new Exception("after must be a GodotNode");

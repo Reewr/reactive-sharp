@@ -23,6 +23,11 @@ abstract public class DomNode : ReactiveSharp.INode
 		Console.Write("Disposed");
 	}
 
+	public bool IsDisposed()
+	{
+		return false;
+	}
+
 	public INode? GetChild(int index) => nodes.Count > index && index >= 0 ? nodes[index] : null;
 
 	private IEnumerable<DomNode> GetAllNodes()

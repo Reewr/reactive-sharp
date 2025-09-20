@@ -22,6 +22,11 @@ public interface INode
 	void Dispose();
 
 	/// <summary>
+	/// Indicates that the node is unusable
+	/// </summary>
+	bool IsDisposed();
+
+	/// <summary>
 	/// Returns the parent node
 	///
 	/// In DOM terms, this would be like calling `node.parentNode`.

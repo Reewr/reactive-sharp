@@ -113,7 +113,7 @@ public partial class Renderer
 
 	private BuiltNode UpdateNode(BuiltNode node)
 	{
-		var inodes = FindINodes(node).ToList();
+		var inodes = FindINodes(node).Where(x => !x.IsDisposed()).ToList();
 		var newBuiltNode = BuildNode(node.Component, inodes);
 		var newKeys = FindComponentKeys(newBuiltNode).ToList();
 		var oldKeys = FindComponentKeys(node).ToList();
