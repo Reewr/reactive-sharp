@@ -60,7 +60,7 @@ public interface IGNode : ReactiveSharp.INode
 		if (i < 0) throw new IndexOutOfRangeException("negative not allowed");
 
 		var count = Node.GetChildCount();
-		if (i != 0 && i >= count) throw new IndexOutOfRangeException();
+		if (i != 0 && i > count) throw new IndexOutOfRangeException();
 
 		// cases were we can simply add at the end
 		if ((i == 0 && count == 0) || (i == count))
